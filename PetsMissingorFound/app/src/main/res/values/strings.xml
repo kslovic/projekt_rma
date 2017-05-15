@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Pets Missing or Found</string>
+    <string name="Register">Register:</string>
+    <string name="Fname">First name:</string>
+    <string name="Lname">Last name:</string>
+    <string name="Uname">User name:</string>
+    <string name="Email">E-mail address</string>
+    <string name="Pnumber">Phone number:</string>
+    <string name="Psw">Password:</string>
+    <string name="PswCon">Password Confirmation:</string>
+    <string name="Enter">Enter</string>
+    <string name="Login">Log in:</string>
+</resources>
