@@ -10,4 +10,13 @@
     <string name="PswCon">Password Confirmation:</string>
     <string name="Enter">Enter</string>
     <string name="Login">Log in:</string>
+    <string name="Notreg">Not registered?</string>
+    <string name="Report">Report a lost/found pet:</string>
+    <string name="Pname">Pet name:</string>
+    <string name="Pbreed">Pet breed:</string>
+    <string name="Pdetails">Details:</string>
+    <string name="Ppicture">Picture:</string>
+    <string name="Llocation">Last location:</string>
+    <string name="Pcontact">Contact:</string>
+    <string name="Pstatus">Status:</string>
 </resources>

@@ -45,5 +45,13 @@
         android:text="@string/Enter"
         android:textColor="@color/label"
         android:background="@color/button"/>
+    <Button
+        android:id="@+id/bnotRegistered"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Notreg"
+        android:textColor="@color/label"
+        android:layout_marginTop="@dimen/margin"
+        android:background="@color/button"/>
 
 </LinearLayout>

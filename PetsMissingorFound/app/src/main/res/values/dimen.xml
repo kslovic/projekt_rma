@@ -3,4 +3,5 @@
     <dimen name="Title">30sp</dimen>
     <dimen name="Titlepadding">150dp</dimen>
     <dimen name="Label">20sp</dimen>
+    <dimen name="margin">20sp</dimen>
 </resources>

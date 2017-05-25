@@ -3,7 +3,12 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@mipmap/catreg"
-    android:gravity="center">
+    >
+    <LinearLayout
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:background="@color/labelshadow">
     <TextView
         android:id="@+id/tvRegister"
         android:layout_width="match_parent"
@@ -11,7 +16,7 @@
         android:text="@string/Register"
         android:textSize="@dimen/Title"
         android:textColor="@color/label"
-        android:background="@color/labelshadow" />
+         />
     <TextView
         android:id="@+id/tvFname"
         android:layout_width="match_parent"
@@ -19,7 +24,7 @@
         android:text="@string/Fname"
         android:textSize="@dimen/Label"
         android:textColor="@color/label"
-        android:background="@color/labelshadow"/>
+        />
     <EditText
         android:id="@+id/etFname"
         android:layout_width="match_parent"
@@ -31,7 +36,7 @@
         android:text="@string/Lname"
         android:textSize="@dimen/Label"
         android:textColor="@color/label"
-        android:background="@color/labelshadow"/>
+        />
     <EditText
         android:id="@+id/etLname"
         android:layout_width="match_parent"
@@ -43,7 +48,7 @@
         android:text="@string/Uname"
         android:textSize="@dimen/Label"
         android:textColor="@color/label"
-        android:background="@color/labelshadow"/>
+       />
     <EditText
         android:id="@+id/etUname"
         android:layout_width="match_parent"
@@ -55,7 +60,7 @@
         android:text="@string/Email"
         android:textSize="@dimen/Label"
         android:textColor="@color/label"
-        android:background="@color/labelshadow"/>
+        />
     <EditText
         android:id="@+id/etEmail"
         android:layout_width="match_parent"
@@ -67,7 +72,7 @@
         android:text="@string/Pnumber"
         android:textSize="@dimen/Label"
         android:textColor="@color/label"
-        android:background="@color/labelshadow"/>
+        />
 
     <EditText
         android:id="@+id/etPnumber"
@@ -81,7 +86,7 @@
         android:text="@string/Psw"
         android:textSize="@dimen/Label"
         android:textColor="@color/label"
-        android:background="@color/labelshadow"/>
+        />
     <EditText
         android:id="@+id/etPsw"
         android:layout_width="match_parent"
@@ -93,7 +98,7 @@
         android:text="@string/PswCon"
         android:textSize="@dimen/Label"
         android:textColor="@color/label"
-        android:background="@color/labelshadow"/>
+        />
     <EditText
         android:id="@+id/etPswCon"
         android:layout_width="match_parent"
@@ -108,5 +113,5 @@
         android:background="@color/button"/>
 
 
-
+    </LinearLayout>
 </LinearLayout>
