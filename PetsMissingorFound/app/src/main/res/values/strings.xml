@@ -19,4 +19,18 @@
     <string name="Llocation">Last location:</string>
     <string name="Pcontact">Contact:</string>
     <string name="Pstatus">Status:</string>
+    <string name="MyAdds">My adds:</string>
+    <string name="Search">Search pets:</string>
+    <string name="Searchhint">Search...</string>
+    <string name="PetMap">Pets near by:</string>
+    <string name="PetDetails">Pet details:</string>
+    <string name="Plocation">Locations:</string>
+    <string name="sMyAdds">My adds</string>
+    <string name="sSearch">Search Pets</string>
+    <string name="sReport">Report a lost/found pet</string>
+    <string name="sShow">Show lost/found pets</string>
+    <string-array name="status">
+        <item>Found</item>
+        <item>Lost</item>
+    </string-array>
 </resources>

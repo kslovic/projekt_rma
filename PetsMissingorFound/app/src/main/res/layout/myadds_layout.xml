@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/labelshadow"
+        >
+    <TextView
+        android:id="@+id/tvAdds"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/MyAdds"
+        android:textSize="@dimen/Title"
+        android:textColor="@color/label"
+        />
+    <ListView
+        android:id="@+id/lvAddsList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvAdds">
+    </ListView>
+    </RelativeLayout>
