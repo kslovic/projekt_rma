@@ -1,57 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/doglogin"
     android:gravity="center"
-    android:paddingTop="@dimen/Titlepadding">
-    <TextView
-        android:id="@+id/tvlogin"
+    android:weightSum="1">
+    <ImageView
+        android:id="@+id/backg"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/Login"
-        android:textSize="@dimen/Title"
-        android:textColor="@color/label"
-        android:background="@color/labelshadow"/>
-    <TextView
-        android:id="@+id/tvUnameLog"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/doglogin" />
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/Uname"
-        android:textSize="@dimen/Label"
-        android:textColor="@color/label"
-        android:background="@color/labelshadow"/>
-    <EditText
-        android:id="@+id/etUnameLog"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:id="@+id/tvPswLog"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/Psw"
-        android:textSize="@dimen/Label"
-        android:textColor="@color/label"
-        android:background="@color/labelshadow"/>
-    <EditText
-        android:id="@+id/etPswLog"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/label"/>
-    <Button
-        android:id="@+id/bLogin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/Enter"
-        android:textColor="@color/label"
-        android:background="@color/button"/>
-    <Button
-        android:id="@+id/bnotRegistered"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/Notreg"
-        android:textColor="@color/label"
-        android:layout_marginTop="@dimen/margin"
-        android:background="@color/button"/>
+        android:layout_height="match_parent"
+        android:layout_weight="0.88"
+        android:background="@color/labelshadow"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/Titlepadding">
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/tvlogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Login"
+            android:textColor="@color/label"
+            android:textSize="@dimen/Title" />
+
+        <TextView
+            android:id="@+id/tvUnameLog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Email"
+            android:textColor="@color/label"
+            android:textSize="@dimen/Label" />
+
+        <EditText
+            android:id="@+id/etUnameLog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"/>
+
+        <TextView
+            android:id="@+id/tvPswLog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Psw"
+            android:textColor="@color/label"
+            android:textSize="@dimen/Label" />
+
+        <EditText
+            android:id="@+id/etPswLog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/label"
+            android:inputType="textPassword"/>
+
+        <Button
+            android:id="@+id/bLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/button"
+            android:text="@string/Enter"
+            android:textColor="@color/label" />
+
+        <Button
+            android:id="@+id/bnotRegistered"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin"
+            android:background="@color/button"
+            android:text="@string/Notreg"
+            android:textColor="@color/label" />
+
+    </LinearLayout>
+    </RelativeLayout>

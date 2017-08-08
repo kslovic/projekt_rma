@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <menu
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <item android:id="@+id/iMyAdds"
+            android:title="@string/sMyAdds"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <item android:id="@+id/iSearchP"
+            android:title="@string/sSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <item android:id="@+id/iReport"
+            android:title="@string/sReport"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <item android:id="@+id/iShow"
+            android:title="@string/sShow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <item android:id="@+id/iSignOut"
+            android:title="@string/sSignOut"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </menu>

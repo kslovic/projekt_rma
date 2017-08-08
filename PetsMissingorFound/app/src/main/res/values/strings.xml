@@ -29,7 +29,9 @@
     <string name="sSearch">Search Pets</string>
     <string name="sReport">Report a lost/found pet</string>
     <string name="sShow">Show lost/found pets</string>
-    <string-array name="status">
+    <string name="sSignOut">Sign out</string>
+    <string name="sWelcome">Welcome ! ! !</string>
+    <string-array name="status_array">
         <item>Found</item>
         <item>Lost</item>
     </string-array>

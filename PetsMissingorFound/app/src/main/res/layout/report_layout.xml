@@ -71,7 +71,7 @@
         android:layout_below="@id/etPdetails"
         />
     <ImageButton
-        android:id="@+id/bAddPic"
+        android:id="@+id/ibAddPic"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:src="@mipmap/add_picture"
@@ -86,15 +86,15 @@
         android:text="@string/Llocation"
         android:textSize="@dimen/Label"
         android:textColor="@color/label"
-        android:layout_below="@id/bAddPic"
+        android:layout_below="@id/ibAddPic"
         />
     <ImageButton
-        android:id="@+id/bAddLocation"
+        android:id="@+id/ibAddLocation"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:src="@mipmap/add_location"
         android:scaleType="centerCrop"
-        android:layout_below="@id/bAddPic"
+        android:layout_below="@id/ibAddPic"
         android:layout_alignRight="@id/tvLlocation"/>
     <TextView
         android:id="@+id/tvPcontact"
@@ -103,7 +103,7 @@
         android:text="@string/Pcontact"
         android:textSize="@dimen/Label"
         android:textColor="@color/label"
-        android:layout_below="@id/bAddLocation"
+        android:layout_below="@id/ibAddLocation"
         />
     <EditText
         android:id="@+id/etPcontact"
