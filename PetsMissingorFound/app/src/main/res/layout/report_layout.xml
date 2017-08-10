@@ -30,7 +30,8 @@
         android:id="@+id/etPname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvPname"/>
+        android:layout_below="@id/tvPname"
+        android:inputType="text"/>
     <TextView
         android:id="@+id/tvPbreed"
         android:layout_width="match_parent"
@@ -44,7 +45,8 @@
         android:id="@+id/etPbreed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvPbreed"/>
+        android:layout_below="@id/tvPbreed"
+        android:inputType="text"/>
     <TextView
         android:id="@+id/tvPdetails"
         android:layout_width="match_parent"
@@ -78,6 +80,22 @@
         android:scaleType="centerCrop"
         android:layout_below="@id/etPdetails"
         android:layout_alignRight="@id/tvPpicture"/>
+    <ImageView
+        android:id="@+id/ivUpload"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_below="@id/tvPpicture"
+        android:visibility="gone"
+        />
+    <Button
+        android:id="@+id/bUpload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ivUpload"
+        android:background="@color/button"
+        android:text="@string/Upload"
+        android:textColor="@color/label"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/tvLlocation"
@@ -88,14 +106,13 @@
         android:textColor="@color/label"
         android:layout_below="@id/ibAddPic"
         />
-    <ImageButton
-        android:id="@+id/ibAddLocation"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:src="@mipmap/add_location"
-        android:scaleType="centerCrop"
-        android:layout_below="@id/ibAddPic"
-        android:layout_alignRight="@id/tvLlocation"/>
+    <fragment
+        android:id="@+id/fGoogleMap"
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:layout_width="400dp"
+        android:layout_height="400dp"
+        android:layout_below="@id/tvLlocation"
+        />
     <TextView
         android:id="@+id/tvPcontact"
         android:layout_width="match_parent"
@@ -103,13 +120,14 @@
         android:text="@string/Pcontact"
         android:textSize="@dimen/Label"
         android:textColor="@color/label"
-        android:layout_below="@id/ibAddLocation"
+        android:layout_below="@id/fGoogleMap"
         />
     <EditText
         android:id="@+id/etPcontact"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvPcontact"/>
+        android:layout_below="@id/tvPcontact"
+        android:inputType="number"/>
     <TextView
         android:id="@+id/tvPstatus"
         android:layout_width="match_parent"

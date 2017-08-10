@@ -31,6 +31,7 @@
     <string name="sShow">Show lost/found pets</string>
     <string name="sSignOut">Sign out</string>
     <string name="sWelcome">Welcome ! ! !</string>
+    <string name="Upload">Upload</string>
     <string-array name="status_array">
         <item>Found</item>
         <item>Lost</item>

@@ -34,6 +34,10 @@ public class Welcome extends Activity  {
                 Intent intent = new Intent(getApplicationContext(), Login.class);
                 startActivity(intent);
                 return true;
+            case R.id.iReport:
+                Intent intentReport = new Intent(getApplicationContext(), ReportPet.class);
+                startActivity(intentReport);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

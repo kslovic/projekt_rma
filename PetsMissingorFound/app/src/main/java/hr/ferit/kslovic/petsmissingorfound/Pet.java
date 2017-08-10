@@ -2,22 +2,28 @@ package hr.ferit.kslovic.petsmissingorfound;
 
 
 public class Pet {
+    private String pid;
     private String etPname;
     private String etPbreed;
     private String etPdetails;
-    private String Picture;
-    private String Location;
     private String etPcontact;
     private String sStatus;
 
-    public Pet(String etPname, String etPbreed, String etPdetails, String picture, String location, String etPcontact, String sStatus) {
+    public Pet(String pid, String etPname, String etPbreed, String etPdetails, String etPcontact, String sStatus) {
+        this.pid = pid;
         this.etPname = etPname;
         this.etPbreed = etPbreed;
         this.etPdetails = etPdetails;
-        Picture = picture;
-        Location = location;
         this.etPcontact = etPcontact;
         this.sStatus = sStatus;
+    }
+
+    public String getPid() {
+        return pid;
+    }
+
+    public void setPid(String pid) {
+        this.pid = pid;
     }
 
     public String getEtPname() {
@@ -42,22 +48,6 @@ public class Pet {
 
     public void setEtPdetails(String etPdetails) {
         this.etPdetails = etPdetails;
-    }
-
-    public String getPicture() {
-        return Picture;
-    }
-
-    public void setPicture(String picture) {
-        Picture = picture;
-    }
-
-    public String getLocation() {
-        return Location;
-    }
-
-    public void setLocation(String location) {
-        Location = location;
     }
 
     public String getEtPcontact() {
