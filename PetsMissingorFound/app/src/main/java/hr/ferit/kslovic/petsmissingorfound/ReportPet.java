@@ -173,13 +173,13 @@ public class ReportPet extends Activity implements View.OnClickListener, Adapter
                         Pet pet = new Pet(pid, pName, pBreed, pDetails, pContact, pStatus);
                         mDatabase.child(pid).setValue(pet);
                         if (pPicture != null) {
-                            DatabaseReference picDatabase = FirebaseDatabase.getInstance().getReference("pictures").child(pid);
+                             DatabaseReference picDatabase = mDatabase.child(pid).child("pictures");
                             String picid = picDatabase.push().getKey();
                             UploadPicture upPic = new UploadPicture(picid, pPicture);
                             picDatabase.child(picid).setValue(upPic);
                         }
                         if (pLocation != null) {
-                            DatabaseReference locDatabase = FirebaseDatabase.getInstance().getReference("locations").child(pid);
+                            DatabaseReference locDatabase = mDatabase.child(pid).child("locations");
                             String locid = locDatabase.push().getKey();
                             PetLocation upLoc = new PetLocation(locid, pLocation);
                             locDatabase.child(locid).setValue(upLoc);

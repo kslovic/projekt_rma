@@ -1,21 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rvItem"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/labelshadow"
     >
+
    <ImageView
        android:id="@+id/ivPetAdd"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content" />
+       android:layout_width="150dp"
+       android:layout_height="150dp"
+       android:scaleType="centerCrop"
+       android:paddingRight="@dimen/listPadding"
+       android:paddingLeft="@dimen/listPadding"
+       />
+    <TextView
+        android:id="@+id/tvLabPetName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/ivPetAdd"
+        android:text="@string/Pname"
+        android:textColor="@color/label"
+        android:textSize="@dimen/Label"/>
+    <TextView
+        android:id="@+id/tvPetName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/ivPetAdd"
+        android:layout_below="@id/tvLabPetName"
+        android:textColor="@color/label"
+        />
+    <TextView
+        android:id="@+id/tvLabStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/ivPetAdd"
+        android:layout_below="@id/tvPetName"
+        android:text="@string/Pstatus"
+        android:textColor="@color/label"
+        android:textSize="@dimen/Label"
+        />
     <TextView
         android:id="@+id/tvStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/ivPetAdd"/>
+        android:layout_toRightOf="@id/ivPetAdd"
+        android:layout_below="@id/tvLabStatus"
+        android:textColor="@color/label"
+        />
+    <TextView
+        android:id="@+id/tvLabBreed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/ivPetAdd"
+        android:layout_below="@id/tvStatus"
+        android:text="@string/Pbreed"
+        android:textColor="@color/label"
+        android:textSize="@dimen/Label"/>
     <TextView
         android:id="@+id/tvBreed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/tvStatus"/>
+        android:layout_toRightOf="@id/ivPetAdd"
+        android:layout_below="@id/tvLabBreed"
+        android:textColor="@color/label"
+        />
 </RelativeLayout>

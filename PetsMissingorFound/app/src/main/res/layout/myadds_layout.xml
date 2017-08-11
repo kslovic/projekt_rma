@@ -12,10 +12,11 @@
         android:textSize="@dimen/Title"
         android:textColor="@color/label"
         />
-    <ListView
-        android:id="@+id/lvAddsList"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvPetList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tvAdds">
-    </ListView>
+
+    </android.support.v7.widget.RecyclerView>
     </RelativeLayout>

@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="hr.ferit.kslovic.petsmissingorfound">
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -25,11 +25,12 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyA8bHBKVxJ1gO-ec8PbRl9aYSouxKcFJrM"/>
+            android:value="AIzaSyA8bHBKVxJ1gO-ec8PbRl9aYSouxKcFJrM" />
 
         <activity android:name=".Register" />
         <activity android:name=".Welcome" />
-        <activity android:name=".ReportPet"></activity>
+        <activity android:name=".ReportPet" />
+        <activity android:name=".MyPetsList"></activity>
     </application>
 
 </manifest>

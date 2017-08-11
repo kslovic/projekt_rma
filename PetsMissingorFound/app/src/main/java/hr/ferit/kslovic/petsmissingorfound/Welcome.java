@@ -38,6 +38,10 @@ public class Welcome extends Activity  {
                 Intent intentReport = new Intent(getApplicationContext(), ReportPet.class);
                 startActivity(intentReport);
                 return true;
+            case R.id.iMyAdds:
+                Intent intentMyAdds = new Intent(getApplicationContext(), MyPetsList.class);
+                startActivity(intentMyAdds);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

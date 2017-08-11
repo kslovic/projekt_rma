@@ -9,6 +9,7 @@ public class Pet {
     private String etPcontact;
     private String sStatus;
 
+    public Pet(){}
     public Pet(String pid, String etPname, String etPbreed, String etPdetails, String etPcontact, String sStatus) {
         this.pid = pid;
         this.etPname = etPname;

@@ -4,6 +4,9 @@ public class UploadPicture {
     public String uid;
     public String url;
 
+    public UploadPicture(){
+
+    }
     public UploadPicture(String uid, String url) {
         this.uid = uid;
         this.url = url;
