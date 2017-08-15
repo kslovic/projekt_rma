@@ -4,19 +4,28 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
@@ -28,6 +37,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -55,13 +65,13 @@ public class PetMap extends Activity implements OnMapReadyCallback,GoogleApiClie
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
     private boolean shown=false;
+    private Marker marker;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.petsmap_layout);
         setUI();
-
     }
     @Override
     public void onPause() {
@@ -101,6 +111,7 @@ public class PetMap extends Activity implements OnMapReadyCallback,GoogleApiClie
     public void onMapReady(GoogleMap googleMap) {
 
         this.mGoogleMap = googleMap;
+        mGoogleMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
         UiSettings uiSettings = this.mGoogleMap.getUiSettings();
         uiSettings.setZoomControlsEnabled(true);
         uiSettings.setMyLocationButtonEnabled(true);
@@ -211,17 +222,18 @@ public class PetMap extends Activity implements OnMapReadyCallback,GoogleApiClie
                 })
                 .show();
     }
-    public void setMarker(LatLng location, String breed, String status, String picture){
+    public void setMarker(LatLng location, String breed, String status,String picture){
         Log.d("Kristina", location.toString());
     MarkerOptions newMarkerOptions = new MarkerOptions();
-                newMarkerOptions.title(breed);
-                newMarkerOptions.snippet(status);
+                newMarkerOptions.title(breed + "\n\n" + status);
+                newMarkerOptions.snippet(picture);
                 if(status.equals("Lost"))
                     newMarkerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.lost));
                 else
                     newMarkerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.found));
                 newMarkerOptions.position(location);
-                mGoogleMap.addMarker(newMarkerOptions);
+        mGoogleMap.addMarker(newMarkerOptions);
+
 }
     private ArrayList<Pet> loadLocations(final Location location) {
             DatabaseReference mapRef = FirebaseDatabase.getInstance().getReference("pets");
@@ -269,5 +281,56 @@ public class PetMap extends Activity implements OnMapReadyCallback,GoogleApiClie
         return (rad * 180.0 / Math.PI);
     }
 
+
+    public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
+        private View view;
+        public CustomInfoWindowAdapter() {
+            view = getLayoutInflater().inflate(R.layout.custom_info_window, null);
+
+        }
+        @Override
+        public View getInfoWindow(final Marker marker) {
+            PetMap.this.marker = marker;
+
+            final String title = marker.getTitle();
+            final TextView titleUi = ((TextView) view.findViewById(R.id.titleMarker));
+            if (title != null) {
+                titleUi.setText(title);
+            } else {
+                titleUi.setText("");
+            }
+            ImageView image = ((ImageView) view.findViewById(R.id.picMarker));
+            final String pic = marker.getSnippet();
+            if (pic != null) {
+                Glide.with(getApplicationContext()).load(pic).listener(new RequestListener<Drawable>() {
+                                                                           @Override
+                                                                           public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                                                               return false;
+                                                                           }
+
+                                                                           @Override
+                                                                           public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                                                               getInfoContents(marker);
+                                                                               return false;
+                                                                           }
+                                                                       }
+                ).into(image);
+
+
+            }
+
+            return view;
+        }
+
+        @Override
+        public View getInfoContents(Marker marker) {
+            if (PetMap.this.marker != null
+                    && PetMap.this.marker.isInfoWindowShown()) {
+                PetMap.this.marker.hideInfoWindow();
+                PetMap.this.marker.showInfoWindow();
+            }
+            return null;
+        }
+    }
 
 }

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@mipmap/bubble"
+    android:orientation="horizontal"
+    >
+    <ImageView
+        android:id="@+id/picMarker"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginRight="5dp"
+        android:src="@mipmap/petpic"
+        android:adjustViewBounds="true"
+        android:layout_marginTop="10dp">
+    </ImageView>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="15dp">
+
+        <TextView
+            android:id="@+id/titleMarker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:textColor="#ff000000"
+            android:textSize="14dp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+</LinearLayout>
