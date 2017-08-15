@@ -1,6 +1,8 @@
 package hr.ferit.kslovic.petsmissingorfound;
 
 
+import com.google.android.gms.maps.model.LatLng;
+
 public class Pet {
     private String pid;
     private String etPname;
@@ -8,15 +10,56 @@ public class Pet {
     private String etPdetails;
     private String etPcontact;
     private String sStatus;
-
+    private String uid;
+    private double lastLatitude;
+    private double lastLongitude;
+    private String Picture;
     public Pet(){}
-    public Pet(String pid, String etPname, String etPbreed, String etPdetails, String etPcontact, String sStatus) {
+
+    public Pet(String pid, String etPname, String etPbreed, String etPdetails, String etPcontact, String sStatus, String uid, double lastLatitude, double lastLongitude, String picture) {
         this.pid = pid;
         this.etPname = etPname;
         this.etPbreed = etPbreed;
         this.etPdetails = etPdetails;
         this.etPcontact = etPcontact;
         this.sStatus = sStatus;
+        this.uid = uid;
+        this.lastLatitude = lastLatitude;
+        this.lastLongitude = lastLongitude;
+        Picture = picture;
+    }
+
+
+    public double getLastLatitude() {
+        return lastLatitude;
+    }
+
+    public void setLastLatitude(double lastLatitude) {
+        this.lastLatitude = lastLatitude;
+    }
+
+    public double getLastLongitude() {
+        return lastLongitude;
+    }
+
+    public void setLastLongitude(double lastLongitude) {
+        this.lastLongitude = lastLongitude;
+    }
+
+    public String getPicture() {
+        return Picture;
+    }
+
+    public void setPicture(String picture) {
+        Picture = picture;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getPid() {

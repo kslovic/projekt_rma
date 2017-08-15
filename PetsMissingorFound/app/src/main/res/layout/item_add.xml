@@ -13,6 +13,7 @@
        android:scaleType="centerCrop"
        android:paddingRight="@dimen/listPadding"
        android:paddingLeft="@dimen/listPadding"
+       android:src="@mipmap/petpic"
        />
     <TextView
         android:id="@+id/tvLabPetName"

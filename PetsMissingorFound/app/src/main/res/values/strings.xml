@@ -32,6 +32,7 @@
     <string name="sSignOut">Sign out</string>
     <string name="sWelcome">Welcome ! ! !</string>
     <string name="Upload">Upload</string>
+    <string name="Show">Show</string>
     <string-array name="status_array">
         <item>Found</item>
         <item>Lost</item>

@@ -12,16 +12,15 @@
         android:textSize="@dimen/Title"
         android:textColor="@color/label"
         />
-    <EditText
-        android:id="@+id/etSearch"
+    <Spinner
+        android:id="@+id/sSearch"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvSearch"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvAddsList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvSearch"
-        android:hint="@string/Searchhint"/>
-    <ListView
-        android:id="@+id/lvAddsList"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/etSearch">
-    </ListView>
+        android:layout_below="@id/sSearch">
+    </android.support.v7.widget.RecyclerView>
 </RelativeLayout>

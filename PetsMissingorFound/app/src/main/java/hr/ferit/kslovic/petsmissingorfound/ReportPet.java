@@ -45,6 +45,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -52,6 +53,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -62,7 +64,6 @@ public class ReportPet extends Activity implements View.OnClickListener, Adapter
     private EditText etPbreed;
     private EditText etPdetails;
     private ImageButton ibAddPic;
-    private ImageButton ibAddLocation;
     private EditText etPcontact;
     private Spinner sStatus;
     private Button bReport;
@@ -77,7 +78,7 @@ public class ReportPet extends Activity implements View.OnClickListener, Adapter
     private String sDownloadUrl;
     GoogleMap mGoogleMap;
     MapFragment mMapFragment;
-    private String location;
+    private LatLng location;
     private static final int REQUEST_LOCATION_PERMISSION = 10;
     TextView tvLocation;
 
@@ -144,7 +145,7 @@ public class ReportPet extends Activity implements View.OnClickListener, Adapter
                 newMarkerOptions.snippet("Pet was last seen here!");
                 newMarkerOptions.position(latLng);
                 mGoogleMap.addMarker(newMarkerOptions);
-                location = latLng.toString();
+                location = latLng;
             }
         };
     }
@@ -156,12 +157,14 @@ public class ReportPet extends Activity implements View.OnClickListener, Adapter
                 FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                 if (firebaseUser != null) {
                     String uid = firebaseUser.getUid();
-                    DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("pets").child(uid);
+                    DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("pets");
                     String pName = etPname.getText().toString();
                     String pBreed = etPbreed.getText().toString();
                     String pDetails = etPdetails.getText().toString();
                     String pPicture = sDownloadUrl;
-                    String pLocation=location;
+                    LatLng pLocation = location;
+                    double pLatitude = location.latitude;
+                    double pLongitude =location.longitude;
                     String pContact = etPcontact.getText().toString();
                     String pStatus = statusSpinner;
                     String pid = mDatabase.push().getKey();
@@ -170,8 +173,12 @@ public class ReportPet extends Activity implements View.OnClickListener, Adapter
 
                     }
                     else {
-                        Pet pet = new Pet(pid, pName, pBreed, pDetails, pContact, pStatus);
+                        Pet pet = new Pet(pid, pName, pBreed, pDetails, pContact, pStatus,uid,pLatitude,pLongitude,pPicture);
                         mDatabase.child(pid).setValue(pet);
+                        HashMap setvalues = new HashMap();
+                        Long tsLong = System.currentTimeMillis()*(-1)/1000;
+                        setvalues.put("pubTime", tsLong);
+                        mDatabase.child(pid).updateChildren(setvalues);
                         if (pPicture != null) {
                              DatabaseReference picDatabase = mDatabase.child(pid).child("pictures");
                             String picid = picDatabase.push().getKey();
@@ -184,6 +191,7 @@ public class ReportPet extends Activity implements View.OnClickListener, Adapter
                             PetLocation upLoc = new PetLocation(locid, pLocation);
                             locDatabase.child(locid).setValue(upLoc);
                         }
+
                         Intent menuIntent = new Intent(getApplicationContext(), Welcome.class);
                         startActivity(menuIntent);
                     }

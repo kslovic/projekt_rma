@@ -30,7 +30,9 @@
         <activity android:name=".Register" />
         <activity android:name=".Welcome" />
         <activity android:name=".ReportPet" />
-        <activity android:name=".MyPetsList"></activity>
+        <activity android:name=".MyPetsList" />
+        <activity android:name=".AllPetsList" />
+        <activity android:name=".PetMap"></activity>
     </application>
 
 </manifest>

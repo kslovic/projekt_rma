@@ -19,9 +19,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 
 public class PetAdapter extends RecyclerView.Adapter<PetAdapter.ViewHolder> {
-    ArrayList<PetAdd> mPets;
+    ArrayList<Pet> mPets;
     Context context;
-    public PetAdapter(ArrayList<PetAdd> pets, Context context) {
+    public PetAdapter(ArrayList<Pet> pets, Context context) {
         mPets = pets;
         this.context=context;
     }
@@ -35,10 +35,10 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.ViewHolder> {
     }
     @Override
     public void onBindViewHolder(final PetAdapter.ViewHolder holder, int position) {
-        final PetAdd pet = this.mPets.get(position);
-        holder.tvPetName.setText(pet.getpName());
-        holder.tvBreed.setText(pet.getpBreed());
-        holder.tvStatus.setText(pet.getpStatus());
+        final Pet pet = this.mPets.get(position);
+        holder.tvPetName.setText(pet.getEtPname());
+        holder.tvBreed.setText(pet.getEtPbreed());
+        holder.tvStatus.setText(pet.getsStatus());
         holder.rvItem.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -58,9 +58,9 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.ViewHolder> {
                 return false;
             }
         });
-        if(pet.getpPic()!=null)
-        Glide.with(context).load(pet.getpPic()).into(holder.ivPetAdd);
-        Log.d("Kristina", pet.getpName() + pet.getpBreed() + pet.getpStatus() +pet.getpPic() );
+        if(pet.getPicture()!=null)
+        Glide.with(context).load(pet.getPicture()).into(holder.ivPetAdd);
+        Log.d("Kristina", pet.getEtPname() + pet.getEtPbreed() + pet.getsStatus() +pet.getPicture() );
 
     }
     @Override

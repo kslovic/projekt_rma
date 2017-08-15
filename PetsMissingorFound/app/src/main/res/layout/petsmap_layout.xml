@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/labelshadow"
     >
+
     <TextView
         android:id="@+id/tvPetMap"
         android:layout_width="match_parent"
@@ -12,11 +13,22 @@
         android:textSize="@dimen/Title"
         android:textColor="@color/label"
         />
+    <Button
+        android:id="@+id/bShow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Show"
+        android:textColor="@color/label"
+        android:background="@color/button"
+      android:layout_below="@id/tvPetMap"
+        android:visibility="gone"
+        />
     <fragment
         android:id="@+id/fGoogleMap"
         android:name="com.google.android.gms.maps.MapFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvPetMap"/>
+        android:layout_below="@id/bShow"
+        android:layout_marginTop="2dp"/>
 
 </RelativeLayout>

@@ -1,11 +1,15 @@
 package hr.ferit.kslovic.petsmissingorfound;
 
+import com.google.android.gms.maps.model.LatLng;
+
 class PetLocation {
 
     private String locId;
-    private String petLocation;
+    private LatLng petLocation;
 
-    public PetLocation(String locId, String petLocation) {
+    public PetLocation(){}
+
+    public PetLocation(String locId, LatLng petLocation) {
         this.locId = locId;
         this.petLocation = petLocation;
     }
@@ -18,11 +22,11 @@ class PetLocation {
         this.locId = locId;
     }
 
-    public String getPetLocation() {
+    public LatLng getPetLocation() {
         return petLocation;
     }
 
-    public void setPetLocation(String petLocation) {
+    public void setPetLocation(LatLng petLocation) {
         this.petLocation = petLocation;
     }
 }

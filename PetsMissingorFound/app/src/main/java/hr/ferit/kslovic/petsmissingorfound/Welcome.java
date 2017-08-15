@@ -42,6 +42,14 @@ public class Welcome extends Activity  {
                 Intent intentMyAdds = new Intent(getApplicationContext(), MyPetsList.class);
                 startActivity(intentMyAdds);
                 return true;
+            case R.id.iSearchP:
+                Intent intentAllAdds = new Intent(getApplicationContext(), AllPetsList.class);
+                startActivity(intentAllAdds);
+                return true;
+            case R.id.iShow:
+                Intent intentLocations = new Intent(getApplicationContext(), PetMap.class);
+                startActivity(intentLocations);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
