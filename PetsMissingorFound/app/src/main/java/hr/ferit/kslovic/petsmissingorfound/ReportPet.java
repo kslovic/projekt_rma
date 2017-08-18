@@ -32,6 +32,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -53,6 +54,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import static android.view.View.GONE;
@@ -80,7 +82,8 @@ public class ReportPet extends Activity implements View.OnClickListener, Adapter
     MapFragment mMapFragment;
     private LatLng location;
     private static final int REQUEST_LOCATION_PERMISSION = 10;
-    TextView tvLocation;
+    private TextView tvLocation;
+    private ArrayList<String> pList;
 
     private GoogleMap.OnMapClickListener mCustomOnMapClickListener;
 
@@ -93,6 +96,7 @@ public class ReportPet extends Activity implements View.OnClickListener, Adapter
     }
 
     private void setUI() {
+        pList = new ArrayList<>();
         etPname = (EditText) findViewById(R.id.etPname);
         etPbreed = (EditText) findViewById(R.id.etPbreed);
         etPdetails = (EditText) findViewById(R.id.etPdetails);
@@ -161,7 +165,9 @@ public class ReportPet extends Activity implements View.OnClickListener, Adapter
                     String pName = etPname.getText().toString();
                     String pBreed = etPbreed.getText().toString();
                     String pDetails = etPdetails.getText().toString();
-                    String pPicture = sDownloadUrl;
+                    String pPicture=null;
+                    if (pList.size()>0)
+                    pPicture = pList.get(0);
                     LatLng pLocation = location;
                     double pLatitude = location.latitude;
                     double pLongitude =location.longitude;
@@ -179,11 +185,13 @@ public class ReportPet extends Activity implements View.OnClickListener, Adapter
                         Long tsLong = System.currentTimeMillis()*(-1)/1000;
                         setvalues.put("pubTime", tsLong);
                         mDatabase.child(pid).updateChildren(setvalues);
-                        if (pPicture != null) {
+                        if (pList.size()>0) {
                              DatabaseReference picDatabase = mDatabase.child(pid).child("pictures");
-                            String picid = picDatabase.push().getKey();
-                            UploadPicture upPic = new UploadPicture(picid, pPicture);
-                            picDatabase.child(picid).setValue(upPic);
+                            for(String pPic: pList) {
+                                String picid = picDatabase.push().getKey();
+                                UploadPicture upPic = new UploadPicture(picid, pPic);
+                                picDatabase.child(picid).setValue(upPic);
+                            }
                         }
                         if (pLocation != null) {
                             DatabaseReference locDatabase = mDatabase.child(pid).child("locations");
@@ -242,6 +250,7 @@ public class ReportPet extends Activity implements View.OnClickListener, Adapter
                                     }*/
                                     if(downloadUrl!=null) {
                                         sDownloadUrl = downloadUrl.toString();
+                                        pList.add(sDownloadUrl);
                                     }
 
                                 }
@@ -274,16 +283,11 @@ public class ReportPet extends Activity implements View.OnClickListener, Adapter
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==REQUEST_CODE&&resultCode==RESULT_OK&&data!=null&&data.getData()!=null) {
             pictureUri = data.getData();
-            try {
-                Bitmap bm = MediaStore.Images.Media.getBitmap(getContentResolver(),pictureUri);
-                ivUpload.setImageBitmap(bm);
-            }
-            catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
+
+                Glide.with(this)
+                        .load(pictureUri)
+                        .into(ivUpload);
+
         }
         }
     public String getPictureExt(Uri uri){

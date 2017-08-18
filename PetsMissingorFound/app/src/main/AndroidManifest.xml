@@ -32,7 +32,9 @@
         <activity android:name=".ReportPet" />
         <activity android:name=".MyPetsList" />
         <activity android:name=".AllPetsList" />
-        <activity android:name=".PetMap"></activity>
+        <activity android:name=".PetMap" />
+        <activity android:name=".PetDetails" />
+        <activity android:name=".ImageSwitch"></activity>
     </application>
 
 </manifest>

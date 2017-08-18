@@ -17,7 +17,7 @@
     <string name="Pdetails">Details:</string>
     <string name="Ppicture">Picture:</string>
     <string name="Llocation">Last location:</string>
-    <string name="Pcontact">Contact:</string>
+    <string name="Pcontact">Contact</string>
     <string name="Pstatus">Status:</string>
     <string name="MyAdds">My adds:</string>
     <string name="Search">Search pets:</string>
@@ -33,6 +33,8 @@
     <string name="sWelcome">Welcome ! ! !</string>
     <string name="Upload">Upload</string>
     <string name="Show">Show</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
     <string-array name="status_array">
         <item>Found</item>
         <item>Lost</item>

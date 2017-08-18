@@ -3,6 +3,7 @@ package hr.ferit.kslovic.petsmissingorfound;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.location.Criteria;
@@ -48,6 +49,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
+import java.util.HashMap;
+
 import com.google.android.gms.location.LocationListener;
 
 import static android.view.View.VISIBLE;
@@ -63,9 +66,9 @@ public class PetMap extends Activity implements OnMapReadyCallback,GoogleApiClie
     private Button bShow;
     LocationRequest mLocationRequest;
     GoogleApiClient mGoogleApiClient;
-    Location mLastLocation;
     private boolean shown=false;
     private Marker marker;
+    private HashMap<Marker, Pet> eventMarkerMap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -86,6 +89,7 @@ public class PetMap extends Activity implements OnMapReadyCallback,GoogleApiClie
 
 
     private void setUI() {
+        eventMarkerMap = new HashMap<Marker, Pet>();
         pList = new ArrayList<>();
         bShow = (Button) findViewById(R.id.bShow);
         this.mMapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.fGoogleMap);
@@ -101,11 +105,13 @@ public class PetMap extends Activity implements OnMapReadyCallback,GoogleApiClie
                         String pBreed = l.getEtPbreed();
                         String pStatus = l.getsStatus();
                         String pPicture = l.getPicture();
-                        setMarker(loc,pBreed,pStatus,pPicture);
+                        String petId =l.getPid();
+                        setMarker(l);
                     }
                 }
             }
         });
+
     }
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -123,6 +129,7 @@ public class PetMap extends Activity implements OnMapReadyCallback,GoogleApiClie
             }
             else{
                 buildGoogleApiClient();
+
             }
         }
         else {
@@ -132,6 +139,15 @@ public class PetMap extends Activity implements OnMapReadyCallback,GoogleApiClie
 
 
         this.mGoogleMap.setMyLocationEnabled(true);
+        mGoogleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Pet pet = eventMarkerMap.get(marker);
+                Intent intent = new Intent(getApplicationContext(), PetDetails.class);
+                intent.putExtra("pid", pet.getPid());
+                startActivity(intent);
+            }
+        });
     }
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -222,17 +238,19 @@ public class PetMap extends Activity implements OnMapReadyCallback,GoogleApiClie
                 })
                 .show();
     }
-    public void setMarker(LatLng location, String breed, String status,String picture){
-        Log.d("Kristina", location.toString());
+    public void setMarker(Pet pet){
     MarkerOptions newMarkerOptions = new MarkerOptions();
-                newMarkerOptions.title(breed + "\n\n" + status);
-                newMarkerOptions.snippet(picture);
-                if(status.equals("Lost"))
+                newMarkerOptions.title(pet.getEtPbreed() + "\n\n" + pet.getsStatus());
+                newMarkerOptions.snippet(pet.getPicture());
+                if(pet.getsStatus().equals("Lost"))
                     newMarkerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.lost));
                 else
                     newMarkerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.found));
-                newMarkerOptions.position(location);
-        mGoogleMap.addMarker(newMarkerOptions);
+                newMarkerOptions.position(new LatLng(pet.getLastLatitude(),pet.getLastLongitude()));
+
+        Marker pMarker =  mGoogleMap.addMarker(newMarkerOptions);
+        eventMarkerMap.put(pMarker, pet);
+
 
 }
     private ArrayList<Pet> loadLocations(final Location location) {
@@ -262,6 +280,7 @@ public class PetMap extends Activity implements OnMapReadyCallback,GoogleApiClie
                             }
                         }
                     }
+                    bShow.setVisibility(VISIBLE);
                 }
 
                 @Override
@@ -270,7 +289,6 @@ public class PetMap extends Activity implements OnMapReadyCallback,GoogleApiClie
 
                 }
             });
-        bShow.setVisibility(VISIBLE);
         return pList;
 
     }
