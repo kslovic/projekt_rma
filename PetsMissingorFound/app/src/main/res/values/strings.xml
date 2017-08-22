@@ -35,6 +35,8 @@
     <string name="Show">Show</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
+    <string name="message">Message ...</string>
+    <string name="Inbox">Inbox</string>
     <string-array name="status_array">
         <item>Found</item>
         <item>Lost</item>

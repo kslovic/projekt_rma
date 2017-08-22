@@ -44,16 +44,11 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.ViewHolder> {
             public boolean onLongClick(View v) {
 
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if (user != null) {
-                    // User is signed in
-                    String uid = user.getUid();
-                    DatabaseReference deleteRef = FirebaseDatabase.getInstance().getReference("pets").child(uid).child(pet.getPid());
+
+                    DatabaseReference deleteRef = FirebaseDatabase.getInstance().getReference("pets").child(pet.getPid());
                     deleteRef.removeValue();
 
-                }
-                else {
-                    //redirect
-                }
+
                 deleteAt(holder.getAdapterPosition());
                 return false;
             }

@@ -34,7 +34,12 @@
         <activity android:name=".AllPetsList" />
         <activity android:name=".PetMap" />
         <activity android:name=".PetDetails" />
-        <activity android:name=".ImageSwitch"></activity>
+        <activity android:name=".ImageSwitch" />
+        <activity
+            android:name=".ChatActivity"
+            android:theme="@style/BaseTheme" />
+        <activity android:name=".InboxActivity"
+            android:theme="@style/BaseTheme"></activity>
     </application>
 
 </manifest>

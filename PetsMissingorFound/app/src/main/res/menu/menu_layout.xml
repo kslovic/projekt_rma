@@ -19,6 +19,10 @@
             android:title="@string/sShow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+        <item android:id="@+id/iInbox"
+            android:title="@string/Inbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
         <item android:id="@+id/iSignOut"
             android:title="@string/sSignOut"
             android:layout_width="match_parent"

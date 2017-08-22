@@ -72,6 +72,7 @@ public class PetDetails extends Activity implements OnMapReadyCallback{
     private String pid;
     private GoogleMap.OnMapClickListener mCustomOnMapClickListener;
     private LatLng newLocation;
+    String pUid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -120,6 +121,17 @@ public class PetDetails extends Activity implements OnMapReadyCallback{
         pList = new ArrayList<>();
         this.mMapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.fGoogleMap);
         this.mMapFragment.getMapAsync(this);
+        bcontactP.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(pUid!=null) {
+                    Log.d("Kristina",pUid);
+                    Intent contactIntent = new Intent(getApplicationContext(), ChatActivity.class);
+                    contactIntent.putExtra("pUid", pUid);
+                    startActivity(contactIntent);
+                }
+            }
+        });
         bPrevious.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -300,6 +312,7 @@ public class PetDetails extends Activity implements OnMapReadyCallback{
                             tvbreedP.setText(pet.getEtPbreed());
                             tvdetailsP.setText(pet.getEtPdetails());
                             tvstatusP.setText(pet.getsStatus());
+                            pUid = pet.getUid();
                             Glide.with(getApplicationContext()).load(pet.getPicture()).into(ibPetDetails);
 
             }

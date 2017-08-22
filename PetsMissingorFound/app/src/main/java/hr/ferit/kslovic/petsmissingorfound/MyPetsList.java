@@ -49,7 +49,6 @@ public class MyPetsList extends Activity {
             this.rvPetList.setAdapter(this.mPetAdapter);
 
 
-
     }
 
     private ArrayList<Pet> loadPets() {

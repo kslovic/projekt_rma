@@ -50,6 +50,10 @@ public class Welcome extends Activity  {
                 Intent intentLocations = new Intent(getApplicationContext(), PetMap.class);
                 startActivity(intentLocations);
                 return true;
+            case R.id.iInbox:
+                Intent intentInbox = new Intent(getApplicationContext(), InboxActivity.class);
+                startActivity(intentInbox);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
