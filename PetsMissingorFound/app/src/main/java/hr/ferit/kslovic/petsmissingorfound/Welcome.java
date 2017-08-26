@@ -8,6 +8,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class Welcome extends Activity  {
 
@@ -53,6 +54,14 @@ public class Welcome extends Activity  {
             case R.id.iInbox:
                 Intent intentInbox = new Intent(getApplicationContext(), InboxActivity.class);
                 startActivity(intentInbox);
+                return true;
+            case R.id.iProfile:
+                FirebaseUser user =FirebaseAuth.getInstance().getCurrentUser();
+                if(user!=null) {
+                    Intent intentProfile = new Intent(getApplicationContext(), ProfileActivity.class);
+                    intentProfile.putExtra("uid", user.getUid());
+                    startActivity(intentProfile);
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -16,10 +16,15 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Objects;
+
+import static android.content.ContentValues.TAG;
 
 public class Register extends Activity implements View.OnClickListener {
 
@@ -32,15 +37,31 @@ public class Register extends Activity implements View.OnClickListener {
     private EditText etPsw;
     private EditText etConPsw;
     private String fName, lName, email, uName, phone ,psw, conPsw;
-
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register_layout);
+        mAuth = FirebaseAuth.getInstance();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    Log.d("Kristina", "onAuthStateChanged:signed_in:" + user.getUid());
+                } else {
+                    // User is signed out
+                    Log.d("Kristina", "onAuthStateChanged:signed_out");
+                }
+                // ...
+            }
+        };
         setUpUI();
+        setData();
     }
     void setUpUI(){
         btnRegister = (Button) findViewById(R.id.bRegister);
@@ -53,23 +74,6 @@ public class Register extends Activity implements View.OnClickListener {
         etConPsw = (EditText) findViewById(R.id.etPswCon);
         this.btnRegister.setOnClickListener(this);
 
-        mAuth = FirebaseAuth.getInstance();
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // User is signed in
-                    Log.d("Kristina", "onAuthStateChanged:signed_in:" + user.getUid());
-                    Intent intent = new Intent(getApplicationContext(), Welcome.class);
-                    startActivity(intent);
-                } else {
-                    // User is signed out
-                    Log.d("Kristina", "onAuthStateChanged:signed_out");
-                }
-                // ...
-            }
-        };
     }
 
     @Override
@@ -106,37 +110,77 @@ public class Register extends Activity implements View.OnClickListener {
 
         }
         else {
-            if(psw.equals(conPsw)){
-                mAuth.createUserWithEmailAndPassword(email, psw)
-                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                Log.d("Kristina", "createUserWithEmail:onComplete:" + task.isSuccessful());
-                                // If sign in fails, display a message to the user. If sign in succeeds
-                                // the auth state listener will be notified and logic to handle the
-                                // signed in user can be handled in the listener.
-                                if (!task.isSuccessful()) {
-                                    // Toast.makeText(EmailPasswordActivity.this, R.string.auth_failed,
-                                    //       Toast.LENGTH_SHORT).show();
-                                } else{
-                                    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                                DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("users");
-                                if (firebaseUser != null) {
-                                    String uid = firebaseUser.getUid();
-                                    Users user = new Users(etFname.getText().toString(), etLname.getText().toString(), etEmail.getText().toString(), etUname.getText().toString(), etPhone.getText().toString(), etPsw.getText().toString());
-                                    mDatabase.child(uid).setValue(user);
-                                    Intent intent = new Intent(getApplicationContext(), Welcome.class);
-                                    startActivity(intent);
+            if(psw.equals(conPsw)) {
+                mDatabase = FirebaseDatabase.getInstance().getReference("users");
+                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                if (firebaseUser != null) {
+                    String uid = firebaseUser.getUid();
+                    firebaseUser.updateEmail(email);
+                    firebaseUser.updatePassword(psw);
+                    Users user = new Users(fName, lName, uName, email, phone, psw);
+                    mDatabase.child(uid).setValue(user);
+                    Intent intent = new Intent(getApplicationContext(), Welcome.class);
+                    startActivity(intent);
+                } else {
+                    mAuth.createUserWithEmailAndPassword(email, psw)
+                            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    Log.d("Kristina", "createUserWithEmail:onComplete:" + task.isSuccessful());
+                                    // If sign in fails, display a message to the user. If sign in succeeds
+                                    // the auth state listener will be notified and logic to handle the
+                                    // signed in user can be handled in the listener.
+                                    if (!task.isSuccessful()) {
+                                        // Toast.makeText(EmailPasswordActivity.this, R.string.auth_failed,
+                                        //       Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                                        if (firebaseUser != null) {
+                                            String uid = firebaseUser.getUid();
+                                            Users user = new Users(fName, lName, uName, email, phone, psw);
+                                            mDatabase.child(uid).setValue(user);
+                                            Intent intent = new Intent(getApplicationContext(), Welcome.class);
+                                            startActivity(intent);
+                                        }
+                                    }
+                                    // ...
                                 }
-                            }
-                                // ...
-                            }
-                        });
+                            });
 
+                }
             }
             else{
                 Toast.makeText(getApplicationContext(), "Password wasn't confirmed", Toast.LENGTH_SHORT).show();
             }
         }
     }
+public void setData(){
+    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+    if(firebaseUser!=null){
+    String uid = firebaseUser.getUid();
+
+        DatabaseReference mapRef = FirebaseDatabase.getInstance().getReference("users").child(uid);
+        mapRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                Users user = dataSnapshot.getValue(Users.class);
+                etFname.setText(user.getFname());
+                etLname.setText(user.getLname());
+                etUname.setText(user.getUname());
+                etPhone.setText(user.getPhone());
+                etEmail.setText(user.getEmail());
+                etPsw.setText(user.getPsw());
+                etConPsw.setText(user.getPsw());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+
+            }
+        });
+
+    }
+}
 }

@@ -25,7 +25,7 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyA8bHBKVxJ1gO-ec8PbRl9aYSouxKcFJrM" />
+            android:value="AIzaSyBgNwC1WH3IqOffqpZVt92pkkg2qRWzla8" />
 
         <activity android:name=".Register" />
         <activity android:name=".Welcome" />
@@ -38,8 +38,11 @@
         <activity
             android:name=".ChatActivity"
             android:theme="@style/BaseTheme" />
-        <activity android:name=".InboxActivity"
-            android:theme="@style/BaseTheme"></activity>
+        <activity
+            android:name=".InboxActivity"
+            android:theme="@style/BaseTheme" />
+        <activity android:name=".EditPet" />
+        <activity android:name=".ProfileActivity"></activity>
     </application>
 
 </manifest>

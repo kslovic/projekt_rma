@@ -6,8 +6,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuInflater;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,7 +44,7 @@ public class MyPetsList extends Activity {
         pList = new ArrayList<>();
         this.rvPetList = (RecyclerView) findViewById(R.id.rvPetList);
 
-            this.mPetAdapter = new PetAdapter(this.loadPets(), this);
+            this.mPetAdapter = new PetAdapter(this.loadPets(), this,"mylist");
             this.mLayoutManager = new LinearLayoutManager(this);
             this.mItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
             this.rvPetList.addItemDecoration(this.mItemDecoration);
@@ -84,34 +87,7 @@ public class MyPetsList extends Activity {
 
                 }
             });
-            /*if(pid!=null) {
-                Log.d("Kristina", "Uslo1" );
-                DatabaseReference picRef = FirebaseDatabase.getInstance().getReference("pictures").child(pid);
-                picRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dSnapshot) {
-                        Log.d("Kristina", "Uslo2" );
-                        for (DataSnapshot picSnapshot: dSnapshot.getChildren()) {
 
-                            UploadPicture upPic = picSnapshot.getValue(UploadPicture.class);
-                            if (upPic != null) {
-                                Log.d("kristina", "uslo");
-                                pPic = upPic.getUrl();
-
-                            }
-                        }
-
-
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError error) {
-                        // Failed to read value
-
-                    }
-                });
-            }*/
             Log.d("Kristina", "onAuthStateChanged:signed_in:" + user.getUid());
         } else {
             // User is signed out
@@ -120,5 +96,6 @@ public class MyPetsList extends Activity {
 
         return pList;
     }
+
 
 }

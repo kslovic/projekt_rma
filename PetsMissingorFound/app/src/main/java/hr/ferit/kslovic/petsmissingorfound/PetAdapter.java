@@ -1,12 +1,16 @@
 package hr.ferit.kslovic.petsmissingorfound;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -21,9 +25,11 @@ import java.util.ArrayList;
 public class PetAdapter extends RecyclerView.Adapter<PetAdapter.ViewHolder> {
     ArrayList<Pet> mPets;
     Context context;
-    public PetAdapter(ArrayList<Pet> pets, Context context) {
+    String mActivity;
+    public PetAdapter(ArrayList<Pet> pets, Context context, String activity) {
         mPets = pets;
         this.context=context;
+        mActivity = activity;
     }
     @Override
     public PetAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -56,6 +62,42 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.ViewHolder> {
         if(pet.getPicture()!=null)
         Glide.with(context).load(pet.getPicture()).into(holder.ivPetAdd);
         Log.d("Kristina", pet.getEtPname() + pet.getEtPbreed() + pet.getsStatus() +pet.getPicture() );
+        holder.rvItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mActivity == "mylist") {
+                    PopupMenu popup = new PopupMenu(context, view);
+
+                    // This activity implements OnMenuItemClickListener
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            switch (item.getItemId()) {
+                                case R.id.edit:
+                                    Intent editIntent = new Intent(context, ReportPet.class);
+                                    editIntent.putExtra("pid", pet.getPid());
+                                    context.startActivity(editIntent);
+                                    return true;
+                                case R.id.open:
+                                    Intent intent = new Intent(context, PetDetails.class);
+                                    intent.putExtra("pid", pet.getPid());
+                                    context.startActivity(intent);
+                                    return true;
+                                default:
+                                    return false;
+                            }
+                        }
+                    });
+                    popup.inflate(R.menu.edit_open_layout);
+                    popup.show();
+                }
+                else{
+                    Intent intent = new Intent(context, PetDetails.class);
+                    intent.putExtra("pid", pet.getPid());
+                    context.startActivity(intent);
+                }
+            }
+        });
 
     }
     @Override
@@ -83,4 +125,9 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.ViewHolder> {
         this.notifyItemRemoved(position);
 
     }
+
+
+
+
+
 }

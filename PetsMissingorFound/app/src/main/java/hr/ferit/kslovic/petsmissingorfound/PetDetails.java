@@ -41,6 +41,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -125,10 +127,9 @@ public class PetDetails extends Activity implements OnMapReadyCallback{
             @Override
             public void onClick(View v) {
                 if(pUid!=null) {
-                    Log.d("Kristina",pUid);
-                    Intent contactIntent = new Intent(getApplicationContext(), ChatActivity.class);
-                    contactIntent.putExtra("pUid", pUid);
-                    startActivity(contactIntent);
+                        Intent intentProfile = new Intent(getApplicationContext(), ProfileActivity.class);
+                        intentProfile.putExtra("uid", pUid);
+                        startActivity(intentProfile);
                 }
             }
         });

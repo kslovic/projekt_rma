@@ -8,6 +8,8 @@ public class Users {
     private String phone;
     private String psw;
 
+    public Users(){}
+
     public Users(String fname, String lname, String uname, String email, String phone, String psw) {
         this.fname = fname;
         this.lname = lname;

@@ -100,7 +100,7 @@ public class AllPetsList extends Activity implements AdapterView.OnItemSelectedL
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         statusSpinner = parent.getItemAtPosition(position).toString();
-        this.mPetAdapter = new PetAdapter(this.loadAllPets(), this);
+        this.mPetAdapter = new PetAdapter(this.loadAllPets(), this,"allList");
         this.mLayoutManager = new LinearLayoutManager(this);
         this.mItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         this.rvPetList.addItemDecoration(this.mItemDecoration);

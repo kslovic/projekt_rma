@@ -4,7 +4,7 @@
     <string name="Fname">First name:</string>
     <string name="Lname">Last name:</string>
     <string name="Uname">User name:</string>
-    <string name="Email">E-mail address</string>
+    <string name="Email">E-mail address:</string>
     <string name="Pnumber">Phone number:</string>
     <string name="Psw">Password:</string>
     <string name="PswCon">Password Confirmation:</string>
@@ -37,6 +37,9 @@
     <string name="previous">Previous</string>
     <string name="message">Message ...</string>
     <string name="Inbox">Inbox</string>
+    <string name="edit">Edit</string>
+    <string name="open">Open</string>
+    <string name="sMyProfile">My profile</string>
     <string-array name="status_array">
         <item>Found</item>
         <item>Lost</item>

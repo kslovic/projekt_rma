@@ -1,20 +1,16 @@
 package hr.ferit.kslovic.petsmissingorfound;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Bundle;
-import android.provider.MediaStore;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -26,7 +22,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -48,22 +43,19 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-public class ReportPet extends Activity implements View.OnClickListener, AdapterView.OnItemSelectedListener, OnMapReadyCallback {
+public class EditPet extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener, OnMapReadyCallback {
 
     private EditText etPname;
     private EditText etPbreed;
@@ -72,12 +64,9 @@ public class ReportPet extends Activity implements View.OnClickListener, Adapter
     private EditText etPcontact;
     private Spinner sStatus;
     private Button bReport;
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
     private String statusSpinner;
     private final int REQUEST_CODE = 1234;
-    private StorageReference mStorageRef;
-    private  Uri pictureUri;
+    private Uri pictureUri;
     private ImageView ivUpload;
     private Button bUpload;
     private String sDownloadUrl;
@@ -87,14 +76,13 @@ public class ReportPet extends Activity implements View.OnClickListener, Adapter
     private static final int REQUEST_LOCATION_PERMISSION = 10;
     private TextView tvLocation;
     private ArrayList<String> pList;
+    private StorageReference mStorageRef;
     private GoogleMap.OnMapClickListener mCustomOnMapClickListener;
     private ArrayAdapter<CharSequence> adapter;
     private  String pid;
-    private double pLatitude;
-    private double pLongitude;
-    private String pPicture;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.report_layout);
         pid = getIntent().getStringExtra("pid");
@@ -126,24 +114,6 @@ public class ReportPet extends Activity implements View.OnClickListener, Adapter
 
         sStatus.setAdapter(adapter);
         sStatus.setOnItemSelectedListener(this);
-        mAuth = FirebaseAuth.getInstance();
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // User is signed in
-                    Log.d("Kristina", "onAuthStateChanged:signed_in:" + user.getUid());
-                    Intent intent = new Intent(getApplicationContext(), Welcome.class);
-                    startActivity(intent);
-                } else {
-                    // User is signed out
-                    Log.d("Kristina", "onAuthStateChanged:signed_out");
-                }
-                // ...
-            }
-        };
-
         this.mMapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.fGoogleMap);
         this.mMapFragment.getMapAsync(this);
         this.mCustomOnMapClickListener = new GoogleMap.OnMapClickListener() {
@@ -158,12 +128,12 @@ public class ReportPet extends Activity implements View.OnClickListener, Adapter
                 location = latLng;
             }
         };
-        setData();
+
     }
     @SuppressWarnings("VisibleForTests")
     @Override
     public void onClick(View v) {
-        switch(v.getId()){
+        switch (v.getId()) {
             case R.id.bReport:
                 FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                 if (firebaseUser != null) {
@@ -172,54 +142,44 @@ public class ReportPet extends Activity implements View.OnClickListener, Adapter
                     String pName = etPname.getText().toString();
                     String pBreed = etPbreed.getText().toString();
                     String pDetails = etPdetails.getText().toString();
-                    if (pList.size()>0)
-                    pPicture = pList.get(0);
-                    if(location!=null) {
-                        pLatitude = location.latitude;
-                        pLongitude = location.longitude;
-                    }
+                    String pPicture = null;
+                    if (pList.size() > 0)
+                        pPicture = pList.get(0);
+                    LatLng pLocation = location;
+                    double pLatitude = location.latitude;
+                    double pLongitude = location.longitude;
                     String pContact = etPcontact.getText().toString();
                     String pStatus = statusSpinner;
                     if(pid==null)
-                        pid = mDatabase.push().getKey();
-                        if (TextUtils.isEmpty(pName) || TextUtils.isEmpty(pBreed) || TextUtils.isEmpty(pDetails) || TextUtils.isEmpty(pContact)) {
-                            Toast.makeText(getApplicationContext(), "Please fill all fields", Toast.LENGTH_SHORT).show();
+                    pid = mDatabase.push().getKey();
+                    if (TextUtils.isEmpty(pName) || TextUtils.isEmpty(pBreed) || TextUtils.isEmpty(pDetails) || TextUtils.isEmpty(pContact)) {
+                        Toast.makeText(getApplicationContext(), "Please fill all fields", Toast.LENGTH_SHORT).show();
 
-                        } else {
-                            /*Pet pet = new Pet(pid, pName, pBreed, pDetails, pContact, pStatus, uid, pLatitude, pLongitude, pPicture);
-                            mDatabase.child(pid).setValue(pet);*/
-                            mDatabase.child(pid).child("pid").setValue(pid);
-                            mDatabase.child(pid).child("etPname").setValue(pName);
-                            mDatabase.child(pid).child("etPbreed").setValue(pBreed);
-                            mDatabase.child(pid).child("etPdetails").setValue(pDetails);
-                            mDatabase.child(pid).child("etPcontact").setValue(pContact);
-                            mDatabase.child(pid).child("sStatus").setValue(pStatus);
-                            mDatabase.child(pid).child("uid").setValue(uid);
-                            mDatabase.child(pid).child("lastLatitude").setValue(pLatitude);
-                            mDatabase.child(pid).child("lastLongitude").setValue(pLongitude);
-                            mDatabase.child(pid).child("picture").setValue(pPicture);
-                            Long tsLong = System.currentTimeMillis() * (-1) / 1000;
-                            mDatabase.child(pid).child("pubTime").setValue(tsLong);
-                            if (pList.size() > 0) {
-                                DatabaseReference picDatabase = mDatabase.child(pid).child("pictures");
-                                for (String pPic : pList) {
-                                    String picid = picDatabase.push().getKey();
-                                    UploadPicture upPic = new UploadPicture(picid, pPic);
-                                    picDatabase.child(picid).setValue(upPic);
-                                }
+                    } else {
+                        Pet pet = new Pet(pid, pName, pBreed, pDetails, pContact, pStatus, uid, pLatitude, pLongitude, pPicture);
+                        mDatabase.child(pid).setValue(pet);
+                        HashMap setvalues = new HashMap();
+                        Long tsLong = System.currentTimeMillis() * (-1) / 1000;
+                        setvalues.put("pubTime", tsLong);
+                        mDatabase.child(pid).updateChildren(setvalues);
+                        if (pList.size() > 0) {
+                            DatabaseReference picDatabase = mDatabase.child(pid).child("pictures");
+                            for (String pPic : pList) {
+                                String picid = picDatabase.push().getKey();
+                                UploadPicture upPic = new UploadPicture(picid, pPic);
+                                picDatabase.child(picid).setValue(upPic);
                             }
-                            if (location != null) {
-                                DatabaseReference locDatabase = mDatabase.child(pid).child("locations");
-                                String locid = locDatabase.push().getKey();
-                                PetLocation upLoc = new PetLocation(locid, location);
-                                locDatabase.child(locid).setValue(upLoc);
-                            }
-
-                            Intent menuIntent = new Intent(getApplicationContext(), Welcome.class);
-                            startActivity(menuIntent);
+                        }
+                        if (pLocation != null) {
+                            DatabaseReference locDatabase = mDatabase.child(pid).child("locations");
+                            String locid = locDatabase.push().getKey();
+                            PetLocation upLoc = new PetLocation(locid, pLocation);
+                            locDatabase.child(locid).setValue(upLoc);
                         }
 
-
+                        Intent menuIntent = new Intent(getApplicationContext(), Welcome.class);
+                        startActivity(menuIntent);
+                    }
                 }
 
                 break;
@@ -227,7 +187,7 @@ public class ReportPet extends Activity implements View.OnClickListener, Adapter
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent,"Select image"),REQUEST_CODE);
+                startActivityForResult(Intent.createChooser(intent, "Select image"), REQUEST_CODE);
                 ivUpload.setVisibility(VISIBLE);
                 bUpload.setVisibility(VISIBLE);
                 RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -237,7 +197,7 @@ public class ReportPet extends Activity implements View.OnClickListener, Adapter
                 tvLocation.setLayoutParams(p);
                 break;
             case R.id.bUpload:
-                if(pictureUri!=null){
+                if (pictureUri != null) {
                     ivUpload.setVisibility(GONE);
                     bUpload.setVisibility(GONE);
                     RelativeLayout.LayoutParams r = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -249,15 +209,15 @@ public class ReportPet extends Activity implements View.OnClickListener, Adapter
                     pDialog.setTitle("Uploading...");
                     pDialog.show();
 
-                    StorageReference refStorage = mStorageRef.child("images/"+ System.currentTimeMillis()+"."+getPictureExt(pictureUri));
+                    StorageReference refStorage = mStorageRef.child("images/" + System.currentTimeMillis() + "." + getPictureExt(pictureUri));
                     refStorage.putFile(pictureUri)
                             .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                 @Override
                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                     // Get a URL to the uploaded content
-                                   Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
                                     pDialog.dismiss();
-                                    Toast.makeText(getApplicationContext(),"Picture uploaded",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), "Picture uploaded", Toast.LENGTH_SHORT).show();
                                     /*FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                                     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("pictures");
                                     if (firebaseUser != null) {
@@ -265,7 +225,7 @@ public class ReportPet extends Activity implements View.OnClickListener, Adapter
 
                                         mDatabase.child(uid).child("System.currentTimeMillis()").setValue(taskSnapshot.getDownloadUrl().toString());
                                     }*/
-                                    if(downloadUrl!=null) {
+                                    if (downloadUrl != null) {
                                         sDownloadUrl = downloadUrl.toString();
                                         pList.add(sDownloadUrl);
                                     }
@@ -278,15 +238,15 @@ public class ReportPet extends Activity implements View.OnClickListener, Adapter
                                     // Handle unsuccessful uploads
                                     // ...
                                     pDialog.dismiss();
-                                    Toast.makeText(getApplicationContext(), exception.getMessage(),Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             })
                             .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
 
                                 @Override
                                 public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                                    double progress = (100*taskSnapshot.getBytesTransferred())/taskSnapshot.getTotalByteCount();
-                                    pDialog.setMessage("Uploaded:"+(int)progress+"%");
+                                    double progress = (100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                                    pDialog.setMessage("Uploaded:" + (int) progress + "%");
                                 }
                             });
 
@@ -294,19 +254,18 @@ public class ReportPet extends Activity implements View.OnClickListener, Adapter
                 break;
         }
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==REQUEST_CODE&&resultCode==RESULT_OK&&data!=null&&data.getData()!=null) {
             pictureUri = data.getData();
 
-                Glide.with(this)
-                        .load(pictureUri)
-                        .into(ivUpload);
+            Glide.with(this)
+                    .load(pictureUri)
+                    .into(ivUpload);
 
         }
-        }
+    }
     public String getPictureExt(Uri uri){
         ContentResolver contentResolver = getContentResolver();
         MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
@@ -338,7 +297,7 @@ public class ReportPet extends Activity implements View.OnClickListener, Adapter
     }
     private void requestPermission(){
         String[] permissions = new String[]{ android.Manifest.permission.ACCESS_FINE_LOCATION };
-        ActivityCompat.requestPermissions(ReportPet.this, permissions, REQUEST_LOCATION_PERMISSION);
+        ActivityCompat.requestPermissions(EditPet.this, permissions, REQUEST_LOCATION_PERMISSION);
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
@@ -358,7 +317,7 @@ public class ReportPet extends Activity implements View.OnClickListener, Adapter
     }
     private void askForPermission(){
         boolean shouldExplain = ActivityCompat.shouldShowRequestPermissionRationale(
-                ReportPet.this, android.Manifest.permission.ACCESS_FINE_LOCATION);
+                EditPet.this, android.Manifest.permission.ACCESS_FINE_LOCATION);
         if(shouldExplain){
             Log.d("Permission","Permission should be explained, - don't show again not clicked.");
             this.displayDialog();
@@ -400,12 +359,9 @@ public class ReportPet extends Activity implements View.OnClickListener, Adapter
                     Pet pet = dataSnapshot.getValue(Pet.class);
                     etPname.setText(pet.getEtPname());
                     etPbreed.setText(pet.getEtPbreed());
-                    etPdetails.setText(pet.getEtPdetails());
+                   etPdetails.setText(pet.getEtPdetails());
                     etPcontact.setText(pet.getEtPcontact());
                     sStatus.setSelection(((adapter.getPosition(pet.getsStatus()))));
-                    pLatitude = pet.getLastLatitude();
-                    pLongitude = pet.getLastLongitude();
-                    pPicture = pet.getPicture();
 
                 }
 
