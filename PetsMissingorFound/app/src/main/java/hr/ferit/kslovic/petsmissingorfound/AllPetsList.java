@@ -49,7 +49,7 @@ public class AllPetsList extends Activity implements AdapterView.OnItemSelectedL
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user!=null) {
             String intent =getIntent().getStringExtra("intent");
-            if(intent.equals("admininterface"))
+            if(intent!=null&&intent.equals("admininterface"))
             loadUser(user.getUid());
             else{this.setUI();}
         }

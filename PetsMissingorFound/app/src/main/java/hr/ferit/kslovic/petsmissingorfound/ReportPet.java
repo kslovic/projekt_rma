@@ -224,10 +224,11 @@ public class ReportPet extends Activity implements View.OnClickListener, Adapter
 
                 break;
             case R.id.ibAddPic:
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent,"Select image"),REQUEST_CODE);
+                Intent intentPic = new Intent();
+                intentPic.setType("image/*");
+                intentPic.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intentPic,"Select image"),REQUEST_CODE);
+                startActivityForResult(Intent.createChooser(intentPic,"Select image"),REQUEST_CODE);
                 ivUpload.setVisibility(VISIBLE);
                 bUpload.setVisibility(VISIBLE);
                 RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,

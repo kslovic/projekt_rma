@@ -5,10 +5,14 @@ import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -31,6 +35,7 @@ public class UserList extends Activity {
     private RecyclerView.ItemDecoration mItemDecoration;
     private ArrayList<Users> uList;
     private String activity = "AllList";
+    private EditText etSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,15 +56,32 @@ public class UserList extends Activity {
 
         uList = new ArrayList<>();
         this.rvUsersList = (RecyclerView) findViewById(R.id.rvUsersList);
-        this.mUserAdapter = new UserAdapter(this.loadUsers(), this,activity);
-        this.mLayoutManager = new LinearLayoutManager(this);
-        this.mItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
-        this.rvUsersList.addItemDecoration(this.mItemDecoration);
-        this.rvUsersList.setLayoutManager(this.mLayoutManager);
-        this.rvUsersList.setAdapter(this.mUserAdapter);
+        etSearch = (EditText) findViewById(R.id.etSearch);
+        etSearch.addTextChangedListener(watcher);
+
 
     }
+    private final TextWatcher watcher = new TextWatcher() {
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+        }
+
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+        public void afterTextChanged(Editable s) {
+            if (s.length() != 0) {
+                String searchTerm = etSearch.getText().toString();
+                mUserAdapter = new UserAdapter(loadUsers(searchTerm), getApplicationContext(),activity);
+                mLayoutManager = new LinearLayoutManager(getApplicationContext());
+                mItemDecoration = new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL);
+                rvUsersList.addItemDecoration(mItemDecoration);
+                rvUsersList.setLayoutManager(mLayoutManager);
+                rvUsersList.setAdapter(mUserAdapter);
+
+            }
+        }
+    };
 
     public void loadUser(String uid){
 
@@ -85,7 +107,7 @@ public class UserList extends Activity {
             }
         });
     }
-    public ArrayList<Users>loadUsers(){
+    public ArrayList<Users>loadUsers(final String search){
         DatabaseReference mapRef = FirebaseDatabase.getInstance().getReference("users");
         mapRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -94,8 +116,10 @@ public class UserList extends Activity {
                 uList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Users user = snapshot.getValue(Users.class);
-                    uList.add(user);
-                    mUserAdapter.notifyDataSetChanged();
+                    if(user.getEmail().matches(".*?"+search+".*?")) {
+                        uList.add(user);
+                        mUserAdapter.notifyDataSetChanged();
+                    }
             }}
             @Override
             public void onCancelled (DatabaseError error){

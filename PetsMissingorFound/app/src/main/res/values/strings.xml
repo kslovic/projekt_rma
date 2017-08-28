@@ -45,6 +45,7 @@
     <string name="Pets">Pets</string>
     <string name="SearchU">Search users:</string>
     <string name="delete">Delete</string>
+    <string name="userhint">Enter user e-mail...</string>
     <string-array name="status_array">
         <item>Found</item>
         <item>Lost</item>

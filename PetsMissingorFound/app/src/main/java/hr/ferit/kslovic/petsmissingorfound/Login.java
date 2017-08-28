@@ -125,15 +125,16 @@ public class Login extends Activity implements View.OnClickListener {
 
 
                 Users user =dataSnapshot.getValue(Users.class);
-                level = user.getLevel();
-                if (level != null && level.equals("normal")) {
-                    Intent intent = new Intent(getApplicationContext(), Welcome.class);
-                    startActivity(intent);
-                } else if (level != null && level.equals("admin")) {
-                    Intent intent = new Intent(getApplicationContext(), AdminActivity.class);
-                    startActivity(intent);
+                if(user!=null) {
+                    level = user.getLevel();
+                    if (level != null && level.equals("normal")) {
+                        Intent intent = new Intent(getApplicationContext(), Welcome.class);
+                        startActivity(intent);
+                    } else if (level != null && level.equals("admin")) {
+                        Intent intent = new Intent(getApplicationContext(), AdminActivity.class);
+                        startActivity(intent);
+                    }
                 }
-
 
             }
             @Override

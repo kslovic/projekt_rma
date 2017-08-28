@@ -12,11 +12,16 @@
         android:textSize="@dimen/Title"
         android:textColor="@color/label"
         />
-
+<EditText
+    android:id="@+id/etSearch"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/tvSearch"
+    android:hint="@string/userhint"/>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvUsersList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvSearch">
+        android:layout_below="@id/etSearch">
     </android.support.v7.widget.RecyclerView>
 </RelativeLayout>

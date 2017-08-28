@@ -23,6 +23,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -69,6 +70,7 @@ class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
                                     context.startActivity(intent);
                                     return true;
                                 case R.id.delete:
+                                    deletePets(user.getUid());
                                     DatabaseReference deleteRef = FirebaseDatabase.getInstance().getReference("users").child(user.getUid());
                                     deleteRef.removeValue();
                                     deleteAt(holder.getAdapterPosition());
@@ -92,6 +94,34 @@ class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
                 }
             });
         }
+    }
+
+    private void deletePets(final String uid) {
+        DatabaseReference petRef = FirebaseDatabase.getInstance().getReference("pets");
+        petRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                    Pet pet = snapshot.getValue(Pet.class);
+
+                    String pUid = pet.getUid();
+                    if(pUid.equals(uid)) {
+                        String pid = pet.getPid();
+                        DatabaseReference deletePetRef = FirebaseDatabase.getInstance().getReference("pets").child(pid);
+                        deletePetRef.removeValue();
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+
+            }
+        });
     }
 
     public void login(String email, String uPsw, final String aMail, final String aPsw) {
