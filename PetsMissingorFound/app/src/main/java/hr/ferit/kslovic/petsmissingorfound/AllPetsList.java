@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -37,13 +38,21 @@ public class AllPetsList extends Activity implements AdapterView.OnItemSelectedL
     private ArrayList<Pet> pList;
     private Spinner sSearch;
     private String statusSpinner;
+    private String activity = "AllList";
+    private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.petlist_layout);
-        this.setUI();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user!=null) {
+            String intent =getIntent().getStringExtra("intent");
+            if(intent.equals("admininterface"))
+            loadUser(user.getUid());
+            else{this.setUI();}
+        }
 
     }
 
@@ -63,7 +72,6 @@ public class AllPetsList extends Activity implements AdapterView.OnItemSelectedL
     }
 
     private ArrayList<Pet> loadAllPets() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             // User is signed in
             String uid = user.getUid();
@@ -80,11 +88,13 @@ public class AllPetsList extends Activity implements AdapterView.OnItemSelectedL
                                     Log.d("Kristina", pet.toString());
                                     pList.add(pet);
                                     mPetAdapter.notifyDataSetChanged();
+
                                 }
 
 
 
                     }
+
                 }
 
                 @Override
@@ -100,7 +110,7 @@ public class AllPetsList extends Activity implements AdapterView.OnItemSelectedL
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         statusSpinner = parent.getItemAtPosition(position).toString();
-        this.mPetAdapter = new PetAdapter(this.loadAllPets(), this,"allList");
+        this.mPetAdapter = new PetAdapter(this.loadAllPets(), this,activity);
         this.mLayoutManager = new LinearLayoutManager(this);
         this.mItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         this.rvPetList.addItemDecoration(this.mItemDecoration);
@@ -112,5 +122,29 @@ public class AllPetsList extends Activity implements AdapterView.OnItemSelectedL
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+    public void loadUser(String uid){
+
+        DatabaseReference mapRef = FirebaseDatabase.getInstance().getReference("users").child(uid);
+        mapRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+
+
+                Users user =dataSnapshot.getValue(Users.class);
+                activity = user.getLevel();
+               if(activity.equals("admin"))
+                   setUI();
+                else
+                   Toast.makeText(getApplicationContext(),"You are not allowded to preform this action!!!",Toast.LENGTH_LONG);
+
+            }
+            @Override
+            public void onCancelled (DatabaseError error){
+                // Failed to read value
+
+            }
+        });
     }
 }

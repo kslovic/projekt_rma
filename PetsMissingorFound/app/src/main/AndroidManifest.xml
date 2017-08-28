@@ -42,7 +42,9 @@
             android:name=".InboxActivity"
             android:theme="@style/BaseTheme" />
         <activity android:name=".EditPet" />
-        <activity android:name=".ProfileActivity"></activity>
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".AdminActivity" />
+        <activity android:name=".UserList" />
     </application>
 
 </manifest>

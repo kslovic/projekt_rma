@@ -30,8 +30,10 @@ public class ProfileActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         uid =getIntent().getStringExtra("uid");
-        setUI();
-        loadUser();
+        if(uid!=null) {
+            setUI();
+            loadUser();
+        }
     }
 
     private void loadUser() {
@@ -43,11 +45,13 @@ public class ProfileActivity extends Activity {
 
 
                     Users user =dataSnapshot.getValue(Users.class);
+                if(user!=null) {
                     tvFirstName.setText(user.getFname());
                     tvLastName.setText(user.getLname());
                     tvUserName.setText(user.getUname());
                     tvEmail.setText(user.getEmail());
                     tvPhoneNum.setText(user.getPhone());
+                }
 
 
 

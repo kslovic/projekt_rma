@@ -27,7 +27,7 @@ public class Login extends Activity implements View.OnClickListener {
     private Button btnLogin;
     private EditText etEmail;
     private EditText etPsw;
-    String email, uPsw;
+    private String email, uPsw, level;
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -39,13 +39,6 @@ public class Login extends Activity implements View.OnClickListener {
         setUpUI();
     }
     void setUpUI(){
-        btnRegister = (Button) findViewById(R.id.bnotRegistered);
-        btnLogin = (Button) findViewById(R.id.bLogin);
-        etEmail = (EditText) findViewById(R.id.etUnameLog);
-        etPsw = (EditText) findViewById(R.id.etPswLog);
-        this.btnRegister.setOnClickListener(this);
-        this.btnLogin.setOnClickListener(this);
-
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -54,15 +47,28 @@ public class Login extends Activity implements View.OnClickListener {
                 if (user != null) {
                     // User is signed in
                     Log.d("Kristina", "onAuthStateChanged:signed_in:" + user.getUid());
-                    Intent intent = new Intent(getApplicationContext(), Welcome.class);
-                    startActivity(intent);
-                } else {
+                    if(level!=null&& level.equals("normal")){
+                        Intent intent = new Intent(getApplicationContext(), Welcome.class);
+                        startActivity(intent);}
+                    else if(level!=null&&level.equals("admin")){
+                        Intent intent = new Intent(getApplicationContext(), AdminActivity.class);
+                        startActivity(intent);}
+                }
+                else {
                     // User is signed out
                     Log.d("Kristina", "onAuthStateChanged:signed_out");
                 }
                 // ...
             }
         };
+        btnRegister = (Button) findViewById(R.id.bnotRegistered);
+        btnLogin = (Button) findViewById(R.id.bLogin);
+        etEmail = (EditText) findViewById(R.id.etUnameLog);
+        etPsw = (EditText) findViewById(R.id.etPswLog);
+
+
+        this.btnRegister.setOnClickListener(this);
+        this.btnLogin.setOnClickListener(this);
     }
 
     @Override
@@ -94,37 +100,47 @@ public class Login extends Activity implements View.OnClickListener {
                                 }
                                 else{
                                     Log.d("Kristina", "signInWithEmail:onComplete:" + task.isSuccessful());
-                                    Intent intent = new Intent(getApplicationContext(), Welcome.class);
-                                    startActivity(intent);
+                                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                                    if (user != null) {
+                                        loadUser(user.getUid());
+                                    }
                                 }
+
 
                                 // ...
                             }
                         });
                 break;
-                /*DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("users");
-                mDatabase.child(email).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
 
-
-                       Users user = dataSnapshot.getValue(Users.class);
-
-                        if(uName.equals(user.getUname())&&uPsw.equals(user.getPsw())){
-                            //user logged in
-                            Toast.makeText(getApplicationContext(), "You are successfully logged in!!!", Toast.LENGTH_SHORT).show();
-                        }
-                        else{
-                            Toast.makeText(getApplicationContext(), "Wrong username or password!!!", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError error) {
-                        // Failed to read value
-                        Log.w("Kiki", "Failed to read value.", error.toException());
-                    }
-                });*/
         }
+    }
+    public void loadUser(String uid){
+
+        DatabaseReference mapRef = FirebaseDatabase.getInstance().getReference("users").child(uid);
+        mapRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+
+
+                Users user =dataSnapshot.getValue(Users.class);
+                level = user.getLevel();
+                if (level != null && level.equals("normal")) {
+                    Intent intent = new Intent(getApplicationContext(), Welcome.class);
+                    startActivity(intent);
+                } else if (level != null && level.equals("admin")) {
+                    Intent intent = new Intent(getApplicationContext(), AdminActivity.class);
+                    startActivity(intent);
+                }
+
+
+            }
+            @Override
+            public void onCancelled (DatabaseError error){
+                // Failed to read value
+
+            }
+        });
     }
 }

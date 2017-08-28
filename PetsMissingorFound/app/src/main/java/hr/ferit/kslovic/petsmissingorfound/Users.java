@@ -1,22 +1,34 @@
 package hr.ferit.kslovic.petsmissingorfound;
 
 public class Users {
+    private String uid;
     private String fname;
     private String lname;
     private String uname;
     private String email;
     private String phone;
     private String psw;
+    private String level;
 
     public Users(){}
 
-    public Users(String fname, String lname, String uname, String email, String phone, String psw) {
+    public Users(String uid, String fname, String lname, String uname, String email, String phone, String psw, String level) {
+        this.uid = uid;
         this.fname = fname;
         this.lname = lname;
         this.uname = uname;
         this.email = email;
         this.phone = phone;
         this.psw = psw;
+        this.level = level;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getFname() {
@@ -65,5 +77,13 @@ public class Users {
 
     public void setPsw(String psw) {
         this.psw = psw;
+    }
+
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
     }
 }

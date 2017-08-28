@@ -40,7 +40,7 @@ public class Register extends Activity implements View.OnClickListener {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference mDatabase;
-
+    private String level = "normal";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,10 +117,16 @@ public class Register extends Activity implements View.OnClickListener {
                     String uid = firebaseUser.getUid();
                     firebaseUser.updateEmail(email);
                     firebaseUser.updatePassword(psw);
-                    Users user = new Users(fName, lName, uName, email, phone, psw);
+                    Users user = new Users(uid,fName, lName, uName, email, phone, psw,level);
                     mDatabase.child(uid).setValue(user);
-                    Intent intent = new Intent(getApplicationContext(), Welcome.class);
-                    startActivity(intent);
+                    if(!level.equals("admin")) {
+                        Intent intent = new Intent(getApplicationContext(), Welcome.class);
+                        startActivity(intent);
+                    }
+                    else{
+                        Intent intent = new Intent(getApplicationContext(), AdminActivity.class);
+                        startActivity(intent);
+                    }
                 } else {
                     mAuth.createUserWithEmailAndPassword(email, psw)
                             .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -137,7 +143,7 @@ public class Register extends Activity implements View.OnClickListener {
                                         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                                         if (firebaseUser != null) {
                                             String uid = firebaseUser.getUid();
-                                            Users user = new Users(fName, lName, uName, email, phone, psw);
+                                            Users user = new Users(uid,fName, lName, uName, email, phone, psw,level);
                                             mDatabase.child(uid).setValue(user);
                                             Intent intent = new Intent(getApplicationContext(), Welcome.class);
                                             startActivity(intent);
@@ -172,6 +178,7 @@ public void setData(){
                 etEmail.setText(user.getEmail());
                 etPsw.setText(user.getPsw());
                 etConPsw.setText(user.getPsw());
+                level = user.getLevel();
             }
 
             @Override

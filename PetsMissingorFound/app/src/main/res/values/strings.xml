@@ -40,6 +40,11 @@
     <string name="edit">Edit</string>
     <string name="open">Open</string>
     <string name="sMyProfile">My profile</string>
+    <string name="Users">Users</string>
+    <string name="Admin">Admin interface:</string>
+    <string name="Pets">Pets</string>
+    <string name="SearchU">Search users:</string>
+    <string name="delete">Delete</string>
     <string-array name="status_array">
         <item>Found</item>
         <item>Lost</item>

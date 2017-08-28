@@ -17,8 +17,11 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -45,11 +48,12 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.ViewHolder> {
         holder.tvPetName.setText(pet.getEtPname());
         holder.tvBreed.setText(pet.getEtPbreed());
         holder.tvStatus.setText(pet.getsStatus());
+        if (mActivity.equals("mylist")||mActivity.equals("admin")) {
         holder.rvItem.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
 
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
 
                     DatabaseReference deleteRef = FirebaseDatabase.getInstance().getReference("pets").child(pet.getPid());
                     deleteRef.removeValue();
@@ -58,14 +62,14 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.ViewHolder> {
                 deleteAt(holder.getAdapterPosition());
                 return false;
             }
-        });
+        });}
         if(pet.getPicture()!=null)
         Glide.with(context).load(pet.getPicture()).into(holder.ivPetAdd);
         Log.d("Kristina", pet.getEtPname() + pet.getEtPbreed() + pet.getsStatus() +pet.getPicture() );
         holder.rvItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mActivity == "mylist") {
+                if (mActivity.equals("mylist")||mActivity.equals("admin")) {
                     PopupMenu popup = new PopupMenu(context, view);
 
                     // This activity implements OnMenuItemClickListener
@@ -125,9 +129,5 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.ViewHolder> {
         this.notifyItemRemoved(position);
 
     }
-
-
-
-
 
 }
