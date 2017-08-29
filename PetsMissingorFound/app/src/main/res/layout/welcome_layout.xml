@@ -10,16 +10,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:src="@mipmap/welcome" />
+        android:src="@drawable/welcome" />
+
     <TextView
+        android:id="@+id/tvWelcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/sWelcome"
-        android:layout_alignParentBottom="true"
-        android:paddingBottom="40dp"
-        android:paddingLeft="50dp"
+        android:layout_marginTop="400dp"
         android:textColor="@color/button"
+        android:layout_marginLeft="50dp"
         android:textSize="50sp"
        />
+    <ImageButton
+        android:id="@+id/ibRefresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_action_name"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="150dp"
+        android:layout_alignParentBottom="true"
+        />
 
 </RelativeLayout>

@@ -211,7 +211,7 @@ public class ReportPet extends Activity implements View.OnClickListener, Adapter
                             if (location != null) {
                                 DatabaseReference locDatabase = mDatabase.child(pid).child("locations");
                                 String locid = locDatabase.push().getKey();
-                                PetLocation upLoc = new PetLocation(locid, location);
+                                PetLocation upLoc = new PetLocation(locid, location, firebaseUser.getEmail());
                                 locDatabase.child(locid).setValue(upLoc);
                             }
 

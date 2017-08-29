@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 
+import hr.ferit.kslovic.petsmissingorfound.Models.Notifications;
+
 public class ChatActivity extends AppCompatActivity {
     private ChatAdapter mChatAdapter;
     private LinearLayoutManager mLayoutManager;
@@ -77,6 +79,10 @@ public class ChatActivity extends AppCompatActivity {
                 Message message2 = new Message(mUname,mText,mTime,user.getUid());
                 cDatabase.child(mid).setValue(message);
                 cDatabase2.child(mid).setValue(message2);
+                    Notifications notifications = new Notifications(pUid,user.getUid(),"message",false);
+                    DatabaseReference nDatabase = FirebaseDatabase.getInstance().getReference("notifications");
+                    String nid = nDatabase.push().getKey();
+                    nDatabase.child(nid).setValue(notifications);
                 }
             }
         });

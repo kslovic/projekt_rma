@@ -173,7 +173,7 @@ public class EditPet extends AppCompatActivity implements View.OnClickListener, 
                         if (pLocation != null) {
                             DatabaseReference locDatabase = mDatabase.child(pid).child("locations");
                             String locid = locDatabase.push().getKey();
-                            PetLocation upLoc = new PetLocation(locid, pLocation);
+                            PetLocation upLoc = new PetLocation(locid, pLocation,firebaseUser.getEmail());
                             locDatabase.child(locid).setValue(upLoc);
                         }
 

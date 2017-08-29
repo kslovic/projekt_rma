@@ -148,7 +148,7 @@
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:scaleType="centerCrop"
-        android:src="@mipmap/add_location"
+        android:src="@drawable/add_location"
         android:layout_below="@id/llLocation"
         android:visibility="gone"/>
     <fragment

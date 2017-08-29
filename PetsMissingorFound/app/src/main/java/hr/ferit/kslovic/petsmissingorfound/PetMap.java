@@ -243,9 +243,9 @@ public class PetMap extends Activity implements OnMapReadyCallback,GoogleApiClie
                 newMarkerOptions.title(pet.getEtPbreed() + "\n\n" + pet.getsStatus());
                 newMarkerOptions.snippet(pet.getPicture());
                 if(pet.getsStatus().equals("Lost"))
-                    newMarkerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.lost));
+                    newMarkerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.lost));
                 else
-                    newMarkerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.found));
+                    newMarkerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.found));
                 newMarkerOptions.position(new LatLng(pet.getLastLatitude(),pet.getLastLongitude()));
 
         Marker pMarker =  mGoogleMap.addMarker(newMarkerOptions);

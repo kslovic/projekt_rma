@@ -2,17 +2,24 @@ package hr.ferit.kslovic.petsmissingorfound;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
@@ -51,6 +58,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import hr.ferit.kslovic.petsmissingorfound.Models.Notifications;
 
 import static android.view.View.VISIBLE;
 
@@ -158,11 +167,19 @@ public class PetDetails extends Activity implements OnMapReadyCallback{
         @Override
         public void onClick(View v) {
             if(newLocation!=null){
-                DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("pets");
-                DatabaseReference locDatabase = mDatabase.child(pid).child("locations");
-                String locid = locDatabase.push().getKey();
-                PetLocation upLoc = new PetLocation(locid, newLocation);
-                locDatabase.child(locid).setValue(upLoc);
+                FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
+                if(fUser!=null) {
+                    DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("pets");
+                    DatabaseReference locDatabase = mDatabase.child(pid).child("locations");
+                    String locid = locDatabase.push().getKey();
+                    PetLocation upLoc = new PetLocation(locid, newLocation, fUser.getEmail());
+                    locDatabase.child(locid).setValue(upLoc);
+                    //add to database notification
+                    Notifications notifications = new Notifications(pUid, pid, "location", false);
+                    DatabaseReference nDatabase = FirebaseDatabase.getInstance().getReference("notifications");
+                    String nid = nDatabase.push().getKey();
+                    nDatabase.child(nid).setValue(notifications);
+                }
             }
 
         }
@@ -171,7 +188,7 @@ public class PetDetails extends Activity implements OnMapReadyCallback{
             @Override
             public void onMapClick(LatLng latLng) {
                 MarkerOptions newMarkerOptions = new MarkerOptions();
-                newMarkerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.lost));
+                newMarkerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.lost));
                 newMarkerOptions.title("New pet location");
                 newMarkerOptions.snippet("Pet was last seen here!");
                 newMarkerOptions.position(latLng);
@@ -219,9 +236,10 @@ public class PetDetails extends Activity implements OnMapReadyCallback{
                     for (DataSnapshot LocationSnapshot :dataSnapshot.child("locations").getChildren()) {
                         double lat = LocationSnapshot.child("petLocation").child("latitude").getValue(Double.class);
                         double lng = LocationSnapshot.child("petLocation").child("longitude").getValue(Double.class);
+                        String email = LocationSnapshot.child("email").getValue(String.class);
                         Log.d("Kristina","uslo3");
                         Log.d("Kristina",new LatLng(lat,lng).toString());
-                        setMarker(new LatLng(lat,lng));
+                        setMarker(new LatLng(lat,lng),email);
                         lList.add(new LatLng(lat,lng));
                     }
                 if(lList.size()>0)
@@ -291,12 +309,12 @@ public class PetDetails extends Activity implements OnMapReadyCallback{
                 })
                 .show();
     }
-    public void setMarker(LatLng location){
+    public void setMarker(LatLng location, String email){
         Log.d("Kristina", location.toString());
         MarkerOptions newMarkerOptions = new MarkerOptions();
-        newMarkerOptions.title("Pet Location");
-        newMarkerOptions.snippet("Pet seen here");
-        newMarkerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.found));
+        newMarkerOptions.title("New pet location");
+        newMarkerOptions.snippet(email);
+        newMarkerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.found));
         newMarkerOptions.position(location);
         mGoogleMap.addMarker(newMarkerOptions);
     }
@@ -326,5 +344,6 @@ public class PetDetails extends Activity implements OnMapReadyCallback{
         });
 
     }
+
 
 }

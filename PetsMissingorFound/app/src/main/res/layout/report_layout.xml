@@ -76,7 +76,7 @@
         android:id="@+id/ibAddPic"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:src="@mipmap/add_picture"
+        android:src="@drawable/add_picture"
         android:scaleType="centerCrop"
         android:layout_below="@id/etPdetails"
         android:layout_alignRight="@id/tvPpicture"/>
