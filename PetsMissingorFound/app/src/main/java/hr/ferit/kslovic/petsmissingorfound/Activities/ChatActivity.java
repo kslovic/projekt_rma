@@ -51,6 +51,12 @@ public class ChatActivity extends MenuActivity {
         setUI();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mChatAdapter.notifyDataSetChanged();
+    }
+
     private void setUI() {
         etMessage = (EditText) findViewById(R.id.etMessage);
         fbChat = (FloatingActionButton) findViewById(R.id.fbChat);

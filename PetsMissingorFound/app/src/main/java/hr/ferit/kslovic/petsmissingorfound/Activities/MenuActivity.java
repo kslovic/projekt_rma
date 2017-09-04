@@ -54,6 +54,13 @@ public class MenuActivity extends AppCompatActivity {
         mAuth.addAuthStateListener(mAuthListener);
         loadNotifications();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        onStart();
+    }
+
     @Override
     public void onStop() {
         super.onStop();

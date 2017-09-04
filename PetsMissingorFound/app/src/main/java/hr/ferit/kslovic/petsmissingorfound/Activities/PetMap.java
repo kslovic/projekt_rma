@@ -77,6 +77,15 @@ public class PetMap extends MenuActivity implements OnMapReadyCallback,GoogleApi
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if(mGoogleMap!=null){
+        mGoogleMap.clear();
+        shown = false;}
+
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
         if (locListener != null) {
@@ -109,11 +118,6 @@ public class PetMap extends MenuActivity implements OnMapReadyCallback,GoogleApi
                 if(pList!=null){
                     Log.d("Kristina", pList.toString());
                     for(Pet l : pList){
-                        LatLng loc = new LatLng(l.getLastLatitude(),l.getLastLongitude());
-                        String pBreed = l.getEtPbreed();
-                        String pStatus = l.getsStatus();
-                        String pPicture = l.getPicture();
-                        String petId =l.getPid();
                         setMarker(l);
                     }
                 }

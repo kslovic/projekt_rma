@@ -107,6 +107,12 @@ public class ReportPet extends MenuActivity implements View.OnClickListener, Ada
         setUI();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(pid!=null)
+        setData();
+    }
 
     private void setUI() {
         pList = new ArrayList<>();

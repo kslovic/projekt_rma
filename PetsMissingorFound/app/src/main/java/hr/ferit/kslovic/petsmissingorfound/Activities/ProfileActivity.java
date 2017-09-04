@@ -38,6 +38,12 @@ public class ProfileActivity extends MenuActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadUser();
+    }
+
     private void loadUser() {
         DatabaseReference mapRef = FirebaseDatabase.getInstance().getReference("users").child(uid);
         mapRef.addListenerForSingleValueEvent(new ValueEventListener() {

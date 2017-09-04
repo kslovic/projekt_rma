@@ -54,10 +54,10 @@ public class PetDetails extends MenuActivity implements OnMapReadyCallback{
     private TextView tvstatusP;
     private ImageButton ibPetDetails;
     private ImageButton ibNewLoc;
+    private String picture;
     GoogleMap mGoogleMap;
     MapFragment mMapFragment;
     private ArrayList<LatLng> lList;
-    private ArrayList<String> pList;
     private static final int REQUEST_LOCATION_PERMISSION = 10;
     private int i=0;
     private String pid;
@@ -65,17 +65,25 @@ public class PetDetails extends MenuActivity implements OnMapReadyCallback{
     private LatLng newLocation;
     private String pUid;
     private Marker newMarker;
-    private DatabaseReference pRef, picRef, locRef;
-    private ValueEventListener pListener, picListener, locListener;
+    private DatabaseReference pRef, locRef;
+    private ValueEventListener pListener, locListener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.petdetails_layout);
-        setUI();
         loadPets();
-        loadPictures();
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadPets();
+        if(mGoogleMap != null){
+            mGoogleMap.clear();
+
+        }
     }
 
     @Override
@@ -84,36 +92,11 @@ public class PetDetails extends MenuActivity implements OnMapReadyCallback{
         if (pListener != null) {
             pRef.removeEventListener(pListener);
         }
-        if (picListener != null) {
-            picRef.removeEventListener(picListener);
-        }
         if (locListener != null) {
             locRef.removeEventListener(locListener);
         }
     }
 
-    private void loadPictures() {
-        picRef = FirebaseDatabase.getInstance().getReference("pets").child(pid);
-        picListener = picRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                pList.clear();
-
-                for (DataSnapshot PicSnapshot :dataSnapshot.child("pictures").getChildren()) {
-                    UploadPicture upPic = PicSnapshot.getValue(UploadPicture.class);
-
-                    pList.add(upPic.getUrl());
-                }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-
-            }
-        });
-    }
 
     private void setUI() {
         tvnameP = (TextView) findViewById(R.id.tvnameP);
@@ -126,7 +109,6 @@ public class PetDetails extends MenuActivity implements OnMapReadyCallback{
         bPrevious = (Button) findViewById(R.id.bPrevious);
         bNext = (Button) findViewById(R.id.bNext);
         lList = new ArrayList<>();
-        pList = new ArrayList<>();
         this.mMapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.fGoogleMap);
         this.mMapFragment.getMapAsync(this);
         bcontactP.setOnClickListener(new View.OnClickListener() {
@@ -202,9 +184,9 @@ public class PetDetails extends MenuActivity implements OnMapReadyCallback{
         ibPetDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(pList!=null) {
+                if(picture!=null) {
                     Intent imageIntent = new Intent(getApplicationContext(), ImageSwitch.class);
-                    imageIntent.putExtra("pictureList",pList);
+                    imageIntent.putExtra("pictureList",pid);
                     startActivity(imageIntent);
                 }
             }
@@ -331,11 +313,13 @@ public class PetDetails extends MenuActivity implements OnMapReadyCallback{
 
                     Pet pet = dataSnapshot.getValue(Pet.class);
                 if(pet!=null) {
+                    setUI();
                     tvnameP.setText(pet.getEtPname());
                     tvbreedP.setText(pet.getEtPbreed());
                     tvdetailsP.setText(pet.getEtPdetails());
                     tvstatusP.setText(pet.getsStatus());
                     pUid = pet.getUid();
+                    picture =pet.getPicture();
                     Glide.with(getApplicationContext()).load(pet.getPicture()).into(ibPetDetails);
                 }
             }

@@ -49,6 +49,13 @@ public class Register extends Activity implements View.OnClickListener {
         setData();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        FirebaseUser user = mAuth.getCurrentUser();
+        if(user!=null)
+        setData();
+    }
 
     void setUpUI(){
         btnRegister = (Button) findViewById(R.id.bRegister);

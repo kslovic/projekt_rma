@@ -40,10 +40,17 @@ public class Login extends Activity implements View.OnClickListener {
         setContentView(R.layout.login_layout);
         setUpUI();
     }
-    void setUpUI(){
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user!=null)
-        FirebaseAuth.getInstance().signOut();
+            FirebaseAuth.getInstance().signOut();
+    }
+
+    void setUpUI(){
+
         mAuth = FirebaseAuth.getInstance();
         btnRegister = (Button) findViewById(R.id.bnotRegistered);
         btnLogin = (Button) findViewById(R.id.bLogin);

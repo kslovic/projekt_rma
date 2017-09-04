@@ -18,10 +18,16 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
+import hr.ferit.kslovic.petsmissingorfound.Models.UploadPicture;
 import hr.ferit.kslovic.petsmissingorfound.R;
 
 public class ImageSwitch extends MenuActivity {
@@ -32,20 +38,35 @@ public class ImageSwitch extends MenuActivity {
     private int i=0;
     private Bitmap bm;
     Context mcontext;
+    private DatabaseReference picRef;
+    private ValueEventListener picListener;
     private StorageReference mStorageRef;
+    private String pid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.image_switcher_layout);
-
         mcontext = this ;
-        setUI();
+        pList = new ArrayList<>();
+        pid = getIntent().getStringExtra("pictureList");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadPictures();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (picListener != null) {
+            picRef.removeEventListener(picListener);
+        }
     }
 
     private void setUI() {
-        pList = new ArrayList<>();
-        pList = getIntent().getStringArrayListExtra("pictureList");
         bPrevious = (Button) findViewById(R.id.bPrevious);
         bNext = (Button) findViewById(R.id.bNext);
 
@@ -60,17 +81,15 @@ public class ImageSwitch extends MenuActivity {
                 return myView;
             }
         });
-        if(pList.size()>0) {
             loadImage(pList.get(0));
-        }
         bPrevious.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(i>0){
                     i--;
                     String picture = pList.get(i);
-                    loadImage(picture);
-                }
+                    loadImage(picture);}
+
             }
         });
         bNext.setOnClickListener(new View.OnClickListener() {
@@ -80,8 +99,7 @@ public class ImageSwitch extends MenuActivity {
                 if(i<pList.size()-1){
                     i++;
                    String picture = pList.get(i);
-                    loadImage(picture);
-                }
+                    loadImage(picture);}
             }
         });
     }
@@ -107,5 +125,29 @@ public class ImageSwitch extends MenuActivity {
                         }).into((ImageView) isPetPic.getCurrentView());
 
 
+    }
+    private void loadPictures() {
+        picRef = FirebaseDatabase.getInstance().getReference("pets").child(pid);
+        picListener = picRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                pList.clear();
+
+                for (DataSnapshot PicSnapshot :dataSnapshot.child("pictures").getChildren()) {
+                    UploadPicture upPic = PicSnapshot.getValue(UploadPicture.class);
+
+                    pList.add(upPic.getUrl());
+                }
+                if(pList.size()>0)
+                    setUI();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+
+            }
+        });
     }
 }

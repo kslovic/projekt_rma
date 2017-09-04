@@ -39,6 +39,12 @@ public class InboxActivity extends MenuActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        mInboxAdapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
         mRef.removeEventListener(mListener);

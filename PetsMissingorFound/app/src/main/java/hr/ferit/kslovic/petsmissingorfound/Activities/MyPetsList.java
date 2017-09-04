@@ -39,6 +39,12 @@ public class MyPetsList extends MenuActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        mPetAdapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
         if (mListener != null) {
