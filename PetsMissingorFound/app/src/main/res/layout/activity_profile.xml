@@ -5,13 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/labelshadow"
-    tools:context="hr.ferit.kslovic.petsmissingorfound.ProfileActivity">
+    tools:context="hr.ferit.kslovic.petsmissingorfound.Activities.ProfileActivity">
     <ImageView
         android:id="@+id/backg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:src="@drawable/profile" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:gravity="center"
+        >
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -121,4 +127,5 @@
     android:background="@color/button"
     android:layout_below="@id/tvContact"/>
 </RelativeLayout>
+</ScrollView>
 </RelativeLayout>

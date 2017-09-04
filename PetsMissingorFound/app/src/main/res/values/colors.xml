@@ -7,4 +7,6 @@
     <color name="button">#99496b38</color>
     <color name="layoutbackg">#5fa93a</color>
     <color name="labelshadow">#60365128</color>
+    <color name="hint">#90FFFFFF</color>
+    <color name="inboxtext" >#90365128</color>
 </resources>

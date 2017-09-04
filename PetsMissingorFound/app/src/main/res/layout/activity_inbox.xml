@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-
     >
     <TextView
         android:id="@+id/tvInbox"
@@ -12,6 +11,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:text="@string/Inbox"
+        android:textColor="@color/inboxtext"
+        android:textSize="@dimen/Label"
         />
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvInbox"

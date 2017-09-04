@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<hr.ferit.kslovic.petsmissingorfound.Models.CustomScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:fillViewport="true"
     android:scrollbars = "vertical"
-    android:scrollbarStyle="insideInset">
+    android:background="@color/labelshadow"
+   >
 <RelativeLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/labelshadow"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/margin10"
+    android:layout_marginRight="@dimen/margin10"
     >
     <TextView
         android:id="@+id/tvPetDetails"
@@ -20,10 +22,11 @@
         />
    <ImageButton
        android:id="@+id/ibPetDetails"
-       android:layout_width="200dp"
-       android:layout_height="200dp"
+       android:layout_width="@dimen/picdimen"
+       android:layout_height="@dimen/picdimen"
        android:layout_below="@id/tvPetDetails"
-       android:scaleType="centerCrop"/>
+       android:scaleType="centerCrop"
+       android:layout_centerHorizontal="true"/>
 
     <TextView
         android:id="@+id/tvPname"
@@ -41,8 +44,8 @@
         android:textSize="@dimen/Label"
         android:textColor="@color/label"
         android:layout_below="@id/ibPetDetails"
-        android:layout_alignParentRight="true"
-        android:paddingRight="20dp"
+        android:layout_toRightOf="@id/tvPname"
+        android:layout_marginLeft="@dimen/margin30"
         />
     <TextView
         android:id="@+id/tvPbreed"
@@ -60,8 +63,8 @@
         android:textSize="@dimen/Label"
         android:textColor="@color/label"
         android:layout_below="@id/tvnameP"
-        android:layout_alignParentRight="true"
-        android:paddingRight="20dp"
+        android:layout_toRightOf="@id/tvPbreed"
+        android:layout_marginLeft="30dp"
         />
     <TextView
         android:id="@+id/tvPdetails"
@@ -83,7 +86,7 @@
 
     <Button
         android:id="@+id/bcontactP"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="@dimen/Label"
         android:background="@color/button"
@@ -107,8 +110,8 @@
         android:textSize="@dimen/Label"
         android:textColor="@color/label"
         android:layout_below="@id/bcontactP"
-        android:layout_alignParentRight="true"
-        android:paddingRight="20dp"
+        android:layout_toRightOf="@id/tvPstatus"
+        android:layout_marginLeft="30dp"
         />
     <TextView
         android:id="@+id/tvPlocation"
@@ -123,9 +126,10 @@
         android:id="@+id/llLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
+       android:layout_centerHorizontal="true"
         android:layout_below="@id/tvPlocation"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginBottom="@dimen/margin10">
     <Button
         android:id="@+id/bPrevious"
         android:layout_width="wrap_content"
@@ -133,7 +137,9 @@
         android:text="@string/previous"
         android:textColor="@color/label"
         android:background="@color/button"
-        android:layout_below="@id/tvPlocation"/>
+        android:paddingLeft="@dimen/margin10"
+        android:paddingRight="@dimen/margin10"
+        android:layout_marginLeft="@dimen/margin10"/>
     <Button
         android:id="@+id/bNext"
         android:layout_width="wrap_content"
@@ -141,6 +147,10 @@
         android:text="@string/next"
         android:textColor="@color/label"
         android:background="@color/button"
+        android:paddingLeft="@dimen/margin10"
+        android:paddingRight="@dimen/margin10"
+        android:layout_marginLeft="@dimen/margin10"
+
        />
     </LinearLayout>
     <ImageButton
@@ -148,9 +158,11 @@
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/add_location"
+        android:src="@drawable/addlocation"
         android:layout_below="@id/llLocation"
-        android:visibility="gone"/>
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        />
     <fragment
         android:id="@+id/fGoogleMap"
         android:name="com.google.android.gms.maps.MapFragment"
@@ -159,4 +171,4 @@
         android:layout_below="@id/ibNewLoc"/>
 
 </RelativeLayout>
-    </ScrollView>
+    </hr.ferit.kslovic.petsmissingorfound.Models.CustomScrollView>

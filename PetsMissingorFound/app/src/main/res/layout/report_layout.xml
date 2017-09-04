@@ -2,11 +2,14 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:gravity="center"
+    >
 <RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:background="@color/labelshadow"
+
     >
     <TextView
         android:id="@+id/tvReport"
@@ -31,7 +34,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tvPname"
-        android:inputType="text"/>
+        android:inputType="text"
+        android:hint="@string/pnameHint"
+        android:textColorHint="@color/hint"
+        android:textStyle="italic"
+        android:textColor="@color/label"/>
     <TextView
         android:id="@+id/tvPbreed"
         android:layout_width="match_parent"
@@ -46,7 +53,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tvPbreed"
-        android:inputType="text"/>
+        android:inputType="text"
+        android:hint="@string/pbreedHint"
+        android:textColorHint="@color/hint"
+        android:textStyle="italic"
+        android:textColor="@color/label"/>
     <TextView
         android:id="@+id/tvPdetails"
         android:layout_width="match_parent"
@@ -60,9 +71,12 @@
         android:id="@+id/etPdetails"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:lines="5"
         android:inputType="textMultiLine"
-        android:layout_below="@id/tvPdetails"/>
+        android:layout_below="@id/tvPdetails"
+        android:hint="@string/pdetailsHint"
+        android:textColorHint="@color/hint"
+        android:textStyle="italic"
+        android:textColor="@color/label"/>
     <TextView
         android:id="@+id/tvPpicture"
         android:layout_width="match_parent"
@@ -76,16 +90,19 @@
         android:id="@+id/ibAddPic"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:src="@drawable/add_picture"
+        android:src="@drawable/addpicture"
         android:scaleType="centerCrop"
-        android:layout_below="@id/etPdetails"
-        android:layout_alignRight="@id/tvPpicture"/>
+        android:layout_below="@id/tvPpicture"
+        android:layout_centerHorizontal="true"
+
+        />
     <ImageView
         android:id="@+id/ivUpload"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_below="@id/tvPpicture"
         android:visibility="gone"
+        android:layout_centerHorizontal="true"
         />
     <Button
         android:id="@+id/bUpload"
@@ -95,7 +112,8 @@
         android:background="@color/button"
         android:text="@string/Upload"
         android:textColor="@color/label"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        android:layout_centerHorizontal="true"/>
 
     <TextView
         android:id="@+id/tvLlocation"
@@ -109,7 +127,7 @@
     <fragment
         android:id="@+id/fGoogleMap"
         android:name="com.google.android.gms.maps.MapFragment"
-        android:layout_width="400dp"
+        android:layout_width="match_parent"
         android:layout_height="400dp"
         android:layout_below="@id/tvLlocation"
         />
@@ -127,7 +145,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tvPcontact"
-        android:inputType="number"/>
+        android:inputType="number"
+        android:hint="@string/pcontactHint"
+        android:textColorHint="@color/hint"
+        android:textStyle="italic"
+        android:textColor="@color/label"/>
     <TextView
         android:id="@+id/tvPstatus"
         android:layout_width="match_parent"
@@ -141,7 +163,8 @@
         android:id="@+id/sStatus"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvPstatus"/>
+        android:layout_below="@id/tvPstatus"
+        />
     <Button
         android:id="@+id/bReport"
         android:layout_width="wrap_content"
@@ -150,6 +173,7 @@
         android:textColor="@color/label"
         android:background="@color/button"
         android:layout_below="@id/sStatus"
+        android:layout_centerHorizontal="true"
        />
 
 </RelativeLayout>

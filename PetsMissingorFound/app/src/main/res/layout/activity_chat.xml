@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="hr.ferit.kslovic.petsmissingorfound.ChatActivity"
+    tools:context="hr.ferit.kslovic.petsmissingorfound.Activities.ChatActivity"
 
     >
     <android.support.design.widget.FloatingActionButton
@@ -17,6 +17,7 @@
         android:layout_alignParentRight="true"
         app:fabSize="mini"
         android:tint="@color/label"
+        android:visibility="gone"
         />
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
@@ -28,7 +29,10 @@
             android:id="@+id/etMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/label"
             android:hint="@string/message"
+            android:textColor="@color/inboxtext"
+            android:textStyle="italic"
             />
     </android.support.design.widget.TextInputLayout>
     <android.support.v7.widget.RecyclerView

@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="listPadding">10dp</dimen>
+    <dimen name="margin10">10dp</dimen>
+    <dimen name="picdimen">200dp</dimen>
+    <dimen name="margin30">30dp</dimen>
 </resources>

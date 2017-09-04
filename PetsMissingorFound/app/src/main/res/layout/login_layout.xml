@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:gravity="center"
     android:weightSum="1">
     <ImageView
@@ -10,6 +11,13 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:src="@drawable/doglogin" />
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:fillViewport="true"
+        android:gravity="center"
+        >
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -33,13 +41,19 @@
             android:layout_height="wrap_content"
             android:text="@string/Email"
             android:textColor="@color/label"
-            android:textSize="@dimen/Label" />
+            android:textSize="@dimen/Label"
+            android:textStyle="bold"/>
 
         <EditText
             android:id="@+id/etUnameLog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"/>
+            android:inputType="textEmailAddress"
+            android:textColor="@color/label"
+            android:hint="@string/Mail"
+            android:textColorHint="@color/hint"
+            android:textStyle="italic"/>
+
 
         <TextView
             android:id="@+id/tvPswLog"
@@ -47,14 +61,19 @@
             android:layout_height="wrap_content"
             android:text="@string/Psw"
             android:textColor="@color/label"
-            android:textSize="@dimen/Label" />
+            android:textSize="@dimen/Label"
+            android:textStyle="bold"/>
 
         <EditText
             android:id="@+id/etPswLog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/label"
-            android:inputType="textPassword"/>
+            android:inputType="textPassword"
+            android:hint="@string/Password"
+            android:textColorHint="@color/hint"
+            android:textStyle="italic"
+            />
 
         <Button
             android:id="@+id/bLogin"
@@ -74,4 +93,5 @@
             android:textColor="@color/label" />
 
     </LinearLayout>
+    </ScrollView>
     </RelativeLayout>

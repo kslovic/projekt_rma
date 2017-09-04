@@ -12,15 +12,17 @@
         android:text="@string/PetMap"
         android:textSize="@dimen/Title"
         android:textColor="@color/label"
+        android:layout_marginLeft="@dimen/margin10"
         />
     <Button
         android:id="@+id/bShow"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/Show"
         android:textColor="@color/label"
         android:background="@color/button"
       android:layout_below="@id/tvPetMap"
+        android:layout_marginBottom="@dimen/margin10"
         android:visibility="gone"
         />
     <fragment
