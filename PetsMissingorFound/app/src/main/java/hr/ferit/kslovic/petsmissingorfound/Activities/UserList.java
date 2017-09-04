@@ -40,6 +40,12 @@ public class UserList extends MenuActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_list);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user!=null) {
             String intent =getIntent().getStringExtra("intent");
@@ -47,7 +53,6 @@ public class UserList extends MenuActivity {
                 loadUser(user.getUid());
             else{this.setUI();}
         }
-
     }
 
     @Override

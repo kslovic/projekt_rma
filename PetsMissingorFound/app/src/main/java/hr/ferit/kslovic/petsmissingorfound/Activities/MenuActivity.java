@@ -35,9 +35,10 @@ public class MenuActivity extends AppCompatActivity {
         inflater.inflate(R.menu.menu_layout, menu);
         return true;
     }
+
     @Override
-    public void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -53,12 +54,6 @@ public class MenuActivity extends AppCompatActivity {
         };
         mAuth.addAuthStateListener(mAuthListener);
         loadNotifications();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        onStart();
     }
 
     @Override

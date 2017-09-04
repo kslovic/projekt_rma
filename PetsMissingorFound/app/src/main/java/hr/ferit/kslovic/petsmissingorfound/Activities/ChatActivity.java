@@ -45,16 +45,16 @@ public class ChatActivity extends MenuActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-        pUid = getIntent().getStringExtra("pUid");
-        loadEmail(pUid);
-        Log.d("Kristina",pUid);
-        setUI();
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mChatAdapter.notifyDataSetChanged();
+        pUid = getIntent().getStringExtra("pUid");
+        loadEmail(pUid);
+        Log.d("Kristina",pUid);
+        setUI();
     }
 
     private void setUI() {
@@ -62,15 +62,15 @@ public class ChatActivity extends MenuActivity {
         fbChat = (FloatingActionButton) findViewById(R.id.fbChat);
         rvMessageList =(RecyclerView) findViewById(R.id.rvMessageList);
         mList = new ArrayList<>();
-            this.mChatAdapter = new ChatAdapter(this.loadMessages(), this);
-            this.mLayoutManager = new LinearLayoutManager(this);
-            mLayoutManager.setStackFromEnd(true);
+        this.mChatAdapter = new ChatAdapter(this.loadMessages(), this);
+        this.mLayoutManager = new LinearLayoutManager(this);
+        mLayoutManager.setStackFromEnd(true);
         mLayoutManager.setReverseLayout(true);
         this.mItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
-            this.rvMessageList.addItemDecoration(this.mItemDecoration);
+        this.rvMessageList.addItemDecoration(this.mItemDecoration);
 
-            this.rvMessageList.setLayoutManager(this.mLayoutManager);
-            this.rvMessageList.setAdapter(this.mChatAdapter);
+        this.rvMessageList.setLayoutManager(this.mLayoutManager);
+        this.rvMessageList.setAdapter(this.mChatAdapter);
 
 
     }

@@ -1,5 +1,6 @@
 package hr.ferit.kslovic.petsmissingorfound.Activities;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
@@ -16,6 +17,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -69,6 +71,9 @@ import static android.view.View.VISIBLE;
 
 public class ReportPet extends MenuActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener, OnMapReadyCallback {
 
+    private static final int REQUEST_LOCATION_PERMISSION = 10;
+    private static final int REQUEST_CAMERA_PERMISSION = 100;
+    private final int REQUEST_STORAGE_PERMISSION = 1234;
     private EditText etPname;
     private EditText etPbreed;
     private EditText etPdetails;
@@ -77,16 +82,15 @@ public class ReportPet extends MenuActivity implements View.OnClickListener, Ada
     private Spinner sStatus;
     private Button bReport;
     private String statusSpinner;
-    private final int REQUEST_CODE = 1234;
     private StorageReference mStorageRef;
     private  Uri pictureUri;
     private ImageView ivUpload;
     private Button bUpload;
     private String sDownloadUrl;
+    private ImageButton ibAddPicCam;
     GoogleMap mGoogleMap;
     MapFragment mMapFragment;
     private LatLng location;
-    private static final int REQUEST_LOCATION_PERMISSION = 10;
     private TextView tvLocation;
     private ArrayList<String> pList;
     private GoogleMap.OnMapClickListener mCustomOnMapClickListener;
@@ -98,18 +102,17 @@ public class ReportPet extends MenuActivity implements View.OnClickListener, Ada
     private Bitmap bmp;
     private ByteArrayOutputStream bos;
     private Marker newMarker;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.report_layout);
-        pid = getIntent().getStringExtra("pid");
         setUI();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        pid = getIntent().getStringExtra("pid");
         if(pid!=null)
         setData();
     }
@@ -126,9 +129,11 @@ public class ReportPet extends MenuActivity implements View.OnClickListener, Ada
         ivUpload = (ImageView) findViewById(R.id.ivUpload);
         bUpload = (Button) findViewById(R.id.bUpload);
         tvLocation = (TextView) findViewById(R.id.tvLlocation);
+        ibAddPicCam = (ImageButton) findViewById(R.id.ibAddPicCam);
         ibAddPic.setOnClickListener(this);
         bReport.setOnClickListener(this);
         bUpload.setOnClickListener(this);
+        ibAddPicCam.setOnClickListener(this);
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
@@ -156,7 +161,6 @@ public class ReportPet extends MenuActivity implements View.OnClickListener, Ada
                 location = latLng;
             }
         };
-        setData();
     }
     @SuppressWarnings("VisibleForTests")
     @Override
@@ -222,26 +226,20 @@ public class ReportPet extends MenuActivity implements View.OnClickListener, Ada
 
                 break;
             case R.id.ibAddPic:
-                Intent intentPic = new Intent();
-                intentPic.setType("image/*");
-                intentPic.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intentPic,"Select image"),REQUEST_CODE);
-                ivUpload.setVisibility(VISIBLE);
-                bUpload.setVisibility(VISIBLE);
-                RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT);
+                boolean hasStoragePermission = (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
 
-                p.addRule(RelativeLayout.BELOW, R.id.bUpload);
-                tvLocation.setLayoutParams(p);
+                if (!hasStoragePermission) {
+                    requestPermission(REQUEST_STORAGE_PERMISSION);
+                } else {
+                    openStorage();
+                }
                 break;
             case R.id.bUpload:
                 if(pictureUri!=null){
                     ivUpload.setVisibility(GONE);
                     bUpload.setVisibility(GONE);
-                    RelativeLayout.LayoutParams r = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT);
-
-                    r.addRule(RelativeLayout.BELOW, R.id.ibAddPic);
+                    RelativeLayout.LayoutParams r = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    r.addRule(RelativeLayout.BELOW, R.id.llReport);
                     tvLocation.setLayoutParams(r);
                     final ProgressDialog pDialog = new ProgressDialog(this);
                     pDialog.setTitle("Uploading...");
@@ -285,46 +283,71 @@ public class ReportPet extends MenuActivity implements View.OnClickListener, Ada
 
                         }
                 break;
+            case R.id.ibAddPicCam:
+                boolean hasCameraPermission = (ContextCompat.checkSelfPermission(this,
+                        Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED);
+
+                if (!hasCameraPermission) {
+                    requestPermission(REQUEST_CAMERA_PERMISSION);
+                } else{
+                    openCamera();
+                }
+                break;
         }
     }
+    private void setPictue() {
+        RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        ivUpload.setVisibility(VISIBLE);
+        bUpload.setVisibility(VISIBLE);
+        p.addRule(RelativeLayout.BELOW, R.id.bUpload);
+        tvLocation.setLayoutParams(p);
+    }
+    private void openStorage() {
+        Intent intentPic = new Intent();
+        intentPic.setType("image/*");
+        intentPic.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intentPic,"Select image"),REQUEST_STORAGE_PERMISSION);
+       setPictue();
+    }
 
+
+
+    private void openCamera() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, REQUEST_CAMERA_PERMISSION);
+        setPictue();
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==REQUEST_CODE&&resultCode==RESULT_OK&&data!=null&&data.getData()!=null) {
-            pictureUri = data.getData();
-            try {
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inSampleSize = 4;
+            if (resultCode == RESULT_OK && data != null && data.getData() != null) {
+                pictureUri = data.getData();
+                try {
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.inSampleSize = 4;
 
-                AssetFileDescriptor fileDescriptor =null;
-                fileDescriptor =
-                        this.getContentResolver().openAssetFileDescriptor(pictureUri, "r");
+                    AssetFileDescriptor fileDescriptor = null;
+                    fileDescriptor =
+                            this.getContentResolver().openAssetFileDescriptor(pictureUri, "r");
 
-                bmp = BitmapFactory.decodeFileDescriptor(fileDescriptor.getFileDescriptor(), null, options);
-                bos = new ByteArrayOutputStream();
-                bmp.compress(Bitmap.CompressFormat.JPEG, 70, bos);
-                Glide.with(this)
-                        .load(pictureUri)
-                        .into(ivUpload);
+                    bmp = BitmapFactory.decodeFileDescriptor(fileDescriptor.getFileDescriptor(), null, options);
+                    bos = new ByteArrayOutputStream();
+                    bmp.compress(Bitmap.CompressFormat.JPEG, 70, bos);
+                    Glide.with(this)
+                            .load(pictureUri)
+                            .into(ivUpload);
 
-            } catch (IOException e) {
-                e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
             }
-
-
-        }
-        }
+    }
     public String getPictureExt(Uri uri){
         ContentResolver contentResolver = getContentResolver();
         MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
         return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
-    }
-    public Uri getImageUri(Context inContext, Bitmap inImage) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
-        return Uri.parse(path);
     }
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -346,47 +369,88 @@ public class ReportPet extends MenuActivity implements View.OnClickListener, Ada
         uiSettings.setZoomGesturesEnabled(true);
         this.mGoogleMap.setOnMapClickListener(this.mCustomOnMapClickListener);
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermission();
+            requestPermission(REQUEST_LOCATION_PERMISSION);
             return;
         }
         this.mGoogleMap.setMyLocationEnabled(true);
     }
-    private void requestPermission(){
-        String[] permissions = new String[]{ android.Manifest.permission.ACCESS_FINE_LOCATION };
-        ActivityCompat.requestPermissions(ReportPet.this, permissions, REQUEST_LOCATION_PERMISSION);
+    private void requestPermission(int requestCode){
+        switch(requestCode) {
+            case REQUEST_LOCATION_PERMISSION:
+            String[] permissions = new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION};
+            ActivityCompat.requestPermissions(ReportPet.this, permissions, REQUEST_LOCATION_PERMISSION);
+              break;
+            case REQUEST_CAMERA_PERMISSION:
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
+                break;
+            case REQUEST_STORAGE_PERMISSION:
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_STORAGE_PERMISSION);
+                break;
+        }
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        switch (requestCode){
-            case REQUEST_LOCATION_PERMISSION:
+
                 if(grantResults.length >0){
                     if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
                         Log.d("Permission","Permission granted. User pressed allow.");
+                        switch (requestCode) {
+                            case REQUEST_CAMERA_PERMISSION:
+                                openCamera();
+                                break;
+                            case REQUEST_STORAGE_PERMISSION:
+                                openStorage();
+                                break;
+                        }
                     }
                     else{
                         Log.d("Permission","Permission not granted. User pressed deny.");
-                        askForPermission();
+                        askForPermission(requestCode);
                     }
                 }
-        }
+
     }
-    private void askForPermission(){
-        boolean shouldExplain = ActivityCompat.shouldShowRequestPermissionRationale(
-                ReportPet.this, android.Manifest.permission.ACCESS_FINE_LOCATION);
+    private void askForPermission( int requestCode){
+        boolean shouldExplain = false;
+        switch (requestCode) {
+            case REQUEST_LOCATION_PERMISSION:
+                shouldExplain = ActivityCompat.shouldShowRequestPermissionRationale(ReportPet.this, Manifest.permission.ACCESS_FINE_LOCATION);
+                break;
+            case REQUEST_CAMERA_PERMISSION:
+                shouldExplain = ActivityCompat.shouldShowRequestPermissionRationale(ReportPet.this, Manifest.permission.CAMERA);
+                break;
+            case REQUEST_STORAGE_PERMISSION:
+                shouldExplain = ActivityCompat.shouldShowRequestPermissionRationale(ReportPet.this, Manifest.permission.READ_EXTERNAL_STORAGE);
+                break;
+        }
+
         if(shouldExplain){
             Log.d("Permission","Permission should be explained, - don't show again not clicked.");
-            this.displayDialog();
+            this.displayDialog(requestCode);
         }
         else{
             Log.d("Permission","Permission not granted. User pressed deny and don't show again.");
             Toast.makeText(getApplicationContext(),"Sorry, we really need that permission",Toast.LENGTH_SHORT).show();
         }
     }
-    private void displayDialog() {
+    private void displayDialog(final int requestCode) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        dialogBuilder.setTitle("Location permission")
-                .setMessage("We display your location and need your permission")
+        switch (requestCode) {
+            case REQUEST_LOCATION_PERMISSION:
+                dialogBuilder.setTitle("Location permission")
+                .setMessage("We display your location and need your permission");
+                break;
+            case REQUEST_CAMERA_PERMISSION:
+                dialogBuilder.setTitle("Camera permission")
+                .setMessage("We use your camera and need your permission");
+                break;
+            case REQUEST_STORAGE_PERMISSION:
+                dialogBuilder.setTitle("Read storage permission")
+                        .setMessage("We read your storage and need your permission");
+                break;
+        }
+        dialogBuilder
                 .setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -398,7 +462,7 @@ public class ReportPet extends MenuActivity implements View.OnClickListener, Ada
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Log.d("Permission","Permission requested because of the explanation.");
-                        requestPermission();
+                        requestPermission(requestCode);
                         dialog.cancel();
                     }
                 })

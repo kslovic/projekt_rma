@@ -72,7 +72,6 @@ public class PetDetails extends MenuActivity implements OnMapReadyCallback{
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.petdetails_layout);
-        loadPets();
 
     }
 
@@ -149,6 +148,8 @@ public class PetDetails extends MenuActivity implements OnMapReadyCallback{
                 FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
                 if(fUser!=null) {
                     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("pets");
+                    mDatabase.child(pid).child("lastLatitude").setValue(newLocation.latitude);
+                    mDatabase.child(pid).child("lastLongitude").setValue(newLocation.longitude);
                     DatabaseReference locDatabase = mDatabase.child(pid).child("locations");
                     String locid = locDatabase.push().getKey();
                     PetLocation upLoc = new PetLocation(locid, newLocation, fUser.getEmail());

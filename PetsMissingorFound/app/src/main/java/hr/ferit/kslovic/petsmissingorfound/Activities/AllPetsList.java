@@ -47,15 +47,21 @@ public class AllPetsList extends MenuActivity implements AdapterView.OnItemSelec
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.petlist_layout);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user!=null) {
             String intent =getIntent().getStringExtra("intent");
             if(intent!=null&&intent.equals("admininterface"))
-            loadUser(user.getUid());
+                loadUser(user.getUid());
             else{this.setUI();}
         }
-
     }
+
     @Override
     public void onStop() {
         super.onStop();

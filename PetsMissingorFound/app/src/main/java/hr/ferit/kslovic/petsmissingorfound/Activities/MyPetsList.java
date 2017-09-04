@@ -35,13 +35,12 @@ public class MyPetsList extends MenuActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.myadds_layout);
-        this.setUI();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mPetAdapter.notifyDataSetChanged();
+       this.setUI();
     }
 
     @Override

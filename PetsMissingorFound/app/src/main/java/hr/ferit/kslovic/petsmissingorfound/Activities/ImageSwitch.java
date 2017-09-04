@@ -49,12 +49,12 @@ public class ImageSwitch extends MenuActivity {
         setContentView(R.layout.image_switcher_layout);
         mcontext = this ;
         pList = new ArrayList<>();
-        pid = getIntent().getStringExtra("pictureList");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        pid = getIntent().getStringExtra("pictureList");
         loadPictures();
     }
 

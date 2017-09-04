@@ -86,16 +86,32 @@
         android:textColor="@color/label"
         android:layout_below="@id/etPdetails"
         />
+    <LinearLayout
+        android:id="@+id/llReport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvPpicture"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal"
+        android:layout_marginBottom="@dimen/margin10">
     <ImageButton
         android:id="@+id/ibAddPic"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:src="@drawable/addpicture"
         android:scaleType="centerCrop"
-        android:layout_below="@id/tvPpicture"
-        android:layout_centerHorizontal="true"
+
 
         />
+    <ImageButton
+        android:id="@+id/ibAddPicCam"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/camera"
+        android:scaleType="centerCrop"
+
+        />
+    </LinearLayout>
     <ImageView
         android:id="@+id/ivUpload"
         android:layout_width="200dp"
@@ -122,7 +138,7 @@
         android:text="@string/Llocation"
         android:textSize="@dimen/Label"
         android:textColor="@color/label"
-        android:layout_below="@id/ibAddPic"
+        android:layout_below="@id/llReport"
         />
     <fragment
         android:id="@+id/fGoogleMap"

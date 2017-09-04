@@ -46,7 +46,6 @@ public class Register extends Activity implements View.OnClickListener {
         setContentView(R.layout.register_layout);
         mAuth = FirebaseAuth.getInstance();
         setUpUI();
-        setData();
     }
 
     @Override

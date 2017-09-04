@@ -31,17 +31,17 @@ public class ProfileActivity extends MenuActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        uid =getIntent().getStringExtra("uid");
-        if(uid!=null) {
-            setUI();
-            loadUser();
-        }
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        loadUser();
+        uid =getIntent().getStringExtra("uid");
+        if(uid!=null) {
+            setUI();
+            loadUser();
+        }
     }
 
     private void loadUser() {

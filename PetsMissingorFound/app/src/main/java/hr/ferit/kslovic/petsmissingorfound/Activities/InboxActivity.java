@@ -35,13 +35,12 @@ public class InboxActivity extends MenuActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inbox);
-        setUI();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mInboxAdapter.notifyDataSetChanged();
+        setUI();
     }
 
     @Override
