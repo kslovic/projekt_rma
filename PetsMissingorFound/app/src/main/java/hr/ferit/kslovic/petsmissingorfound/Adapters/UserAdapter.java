@@ -55,7 +55,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
         final Users user = this.mUsers.get(position);
         holder.tvEmail.setText(user.getEmail());
         holder.tvPhone.setText(user.getPhone());
-        if (mActivity.equals("mylist")||mActivity.equals("admin")) {
+        if (mActivity.equals("admin")) {
             holder.rvItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

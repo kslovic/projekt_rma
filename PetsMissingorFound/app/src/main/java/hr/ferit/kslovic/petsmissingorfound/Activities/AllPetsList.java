@@ -36,10 +36,10 @@ public class AllPetsList extends MenuActivity implements AdapterView.OnItemSelec
     private String pPic;
     private ArrayList<Pet> pList;
     private Spinner sSearch;
-    private String statusSpinner="Found";
+    private String statusSpinner;
     private String activity = "AllList";
     private FirebaseUser user;
-    private ValueEventListener mListener;
+    private ValueEventListener qListener;
     private Query query;
 
     @Override
@@ -47,30 +47,41 @@ public class AllPetsList extends MenuActivity implements AdapterView.OnItemSelec
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.petlist_layout);
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user!=null) {
             String intent =getIntent().getStringExtra("intent");
             if(intent!=null&&intent.equals("admininterface"))
-                loadUser(user.getUid());
+            loadUser(user.getUid());
             else{this.setUI();}
         }
+
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        if (mListener != null) {
-            query.removeEventListener(mListener);
+        if(qListener!=null)
+            query.removeEventListener(qListener);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(mPetAdapter!=null){
+        this.mPetAdapter = new PetAdapter(this.loadAllPets(), this,activity);
+        this.rvPetList.setAdapter(this.mPetAdapter);
         }
     }
 
+
     private void setUI() {
+        pList = new ArrayList<>();
+        this.rvPetList = (RecyclerView) findViewById(R.id.rvAddsList);
+        this.mLayoutManager = new LinearLayoutManager(this);
+        this.mItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+        this.rvPetList.addItemDecoration(this.mItemDecoration);
+        this.rvPetList.setLayoutManager(this.mLayoutManager);
+
         sSearch = (Spinner) findViewById(R.id.sSearch);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.status_array, android.R.layout.simple_spinner_item);
@@ -79,8 +90,6 @@ public class AllPetsList extends MenuActivity implements AdapterView.OnItemSelec
 
         sSearch.setAdapter(adapter);
         sSearch.setOnItemSelectedListener(this);
-        pList = new ArrayList<>();
-        this.rvPetList = (RecyclerView) findViewById(R.id.rvAddsList);
 
 
     }
@@ -88,10 +97,9 @@ public class AllPetsList extends MenuActivity implements AdapterView.OnItemSelec
     private ArrayList<Pet> loadAllPets() {
         if (user != null) {
             // User is signed in
-            String uid = user.getUid();
             DatabaseReference addRef = FirebaseDatabase.getInstance().getReference("pets");
             query = addRef.orderByChild("pubTime");
-            mListener = query.addValueEventListener(new ValueEventListener() {
+           qListener = query.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     pList.clear();
@@ -105,7 +113,7 @@ public class AllPetsList extends MenuActivity implements AdapterView.OnItemSelec
 
                                 }
 
-
+                                rvPetList.setAdapter(mPetAdapter);
 
                     }
 
@@ -123,13 +131,11 @@ public class AllPetsList extends MenuActivity implements AdapterView.OnItemSelec
     }
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if(qListener!=null)
+            query.removeEventListener(qListener);
         statusSpinner = parent.getItemAtPosition(position).toString();
-        this.mPetAdapter = new PetAdapter(this.loadAllPets(), this,activity);
-        this.mLayoutManager = new LinearLayoutManager(this);
-        this.mItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
-        this.rvPetList.addItemDecoration(this.mItemDecoration);
-        this.rvPetList.setLayoutManager(this.mLayoutManager);
-        this.rvPetList.setAdapter(this.mPetAdapter);
+        Log.d("Kristina",statusSpinner);
+            this.mPetAdapter = new PetAdapter(this.loadAllPets(), this,activity);
 
     }
 

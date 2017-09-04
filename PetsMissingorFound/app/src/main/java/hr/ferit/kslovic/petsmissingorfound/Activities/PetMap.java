@@ -66,8 +66,6 @@ public class PetMap extends MenuActivity implements OnMapReadyCallback,GoogleApi
     private boolean shown=false;
     private Marker marker;
     private HashMap<Marker, Pet> eventMarkerMap;
-    private ValueEventListener locListener;
-    private DatabaseReference locRef;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -85,13 +83,6 @@ public class PetMap extends MenuActivity implements OnMapReadyCallback,GoogleApi
 
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (locListener != null) {
-            locRef.removeEventListener(locListener);
-        }
-    }
 
     @Override
     public void onPause() {
@@ -266,8 +257,8 @@ public class PetMap extends MenuActivity implements OnMapReadyCallback,GoogleApi
 
 }
     private ArrayList<Pet> loadLocations(final Location location) {
-            locRef = FirebaseDatabase.getInstance().getReference("pets");
-            locListener = locRef.addValueEventListener(new ValueEventListener() {
+            DatabaseReference locRef = FirebaseDatabase.getInstance().getReference("pets");
+            locRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     pList.clear();

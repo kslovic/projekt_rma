@@ -33,39 +33,30 @@ public class UserList extends MenuActivity {
     private ArrayList<Users> uList;
     private String activity = "AllList";
     private EditText etSearch;
-    private DatabaseReference userRef;
-    private ValueEventListener userListener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_list);
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user!=null) {
             String intent =getIntent().getStringExtra("intent");
             if(intent.equals("admininterface"))
                 loadUser(user.getUid());
-            else{this.setUI();}
         }
+
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        if(userListener!=null){
-            userRef.removeEventListener(userListener);
-        }
-    }
+
     private void setUI() {
 
         uList = new ArrayList<>();
         this.rvUsersList = (RecyclerView) findViewById(R.id.rvUsersList);
+        mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        mItemDecoration = new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL);
+        rvUsersList.addItemDecoration(mItemDecoration);
+        rvUsersList.setLayoutManager(mLayoutManager);
+
         etSearch = (EditText) findViewById(R.id.etSearch);
         etSearch.addTextChangedListener(watcher);
 
@@ -83,12 +74,7 @@ public class UserList extends MenuActivity {
             if (s.length() != 0) {
                 String searchTerm = etSearch.getText().toString();
                 mUserAdapter = new UserAdapter(loadUsers(searchTerm), getApplicationContext(),activity);
-                mLayoutManager = new LinearLayoutManager(getApplicationContext());
-                mItemDecoration = new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL);
-                rvUsersList.addItemDecoration(mItemDecoration);
-                rvUsersList.setLayoutManager(mLayoutManager);
                 rvUsersList.setAdapter(mUserAdapter);
-
             }
         }
     };
@@ -118,8 +104,8 @@ public class UserList extends MenuActivity {
         });
     }
     public ArrayList<Users>loadUsers(final String search){
-        userRef = FirebaseDatabase.getInstance().getReference("users");
-        userListener = userRef.addValueEventListener(new ValueEventListener() {
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users");
+       userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 

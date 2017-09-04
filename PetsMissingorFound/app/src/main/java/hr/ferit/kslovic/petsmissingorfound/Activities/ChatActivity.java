@@ -45,12 +45,6 @@ public class ChatActivity extends MenuActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         pUid = getIntent().getStringExtra("pUid");
         loadEmail(pUid);
         Log.d("Kristina",pUid);
@@ -68,7 +62,6 @@ public class ChatActivity extends MenuActivity {
         mLayoutManager.setReverseLayout(true);
         this.mItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         this.rvMessageList.addItemDecoration(this.mItemDecoration);
-
         this.rvMessageList.setLayoutManager(this.mLayoutManager);
         this.rvMessageList.setAdapter(this.mChatAdapter);
 

@@ -35,12 +35,14 @@ public class InboxActivity extends MenuActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inbox);
+        setUI();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        setUI();
+        this.mInboxAdapter = new InboxAdapter(this.loadMessages(), this);
+        this.rvInbox.setAdapter(this.mInboxAdapter);
     }
 
     @Override
@@ -52,14 +54,11 @@ public class InboxActivity extends MenuActivity {
     private void setUI() {
         rvInbox = (RecyclerView) findViewById(R.id.rvInbox);
         mList = new ArrayList<>();
-        this.mInboxAdapter = new InboxAdapter(this.loadMessages(), this);
         this.mLayoutManager = new LinearLayoutManager(this);
         mLayoutManager.setReverseLayout(true);
         this.mItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         this.rvInbox.addItemDecoration(this.mItemDecoration);
-
         this.rvInbox.setLayoutManager(this.mLayoutManager);
-        this.rvInbox.setAdapter(this.mInboxAdapter);
     }
 
     private ArrayList<Message> loadMessages() {

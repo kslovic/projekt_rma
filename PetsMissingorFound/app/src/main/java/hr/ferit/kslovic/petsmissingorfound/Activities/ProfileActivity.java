@@ -27,21 +27,22 @@ public class ProfileActivity extends MenuActivity {
     private TextView tvUserName;
     private TextView tvPhoneNum;
     private String uid;
+    private  FirebaseUser fUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-
+        uid =getIntent().getStringExtra("uid");
+        if(uid!=null) {
+            setUI();
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        uid =getIntent().getStringExtra("uid");
-        if(uid!=null) {
-            setUI();
-            loadUser();
-        }
+        fUser = FirebaseAuth.getInstance().getCurrentUser();
+        loadUser();
     }
 
     private void loadUser() {
@@ -79,7 +80,7 @@ public class ProfileActivity extends MenuActivity {
         tvEmail = (TextView) findViewById(R.id.tvEmail);
         tvPhoneNum = (TextView) findViewById(R.id.tvPhoneNum);
         bContact = (Button) findViewById(R.id.bContactEdit);
-        FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
+        fUser = FirebaseAuth.getInstance().getCurrentUser();
         if (fUser != null) {
             if (uid.equals(fUser.getUid())){
                 bContact.setText("Edit");

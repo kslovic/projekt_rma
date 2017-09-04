@@ -35,12 +35,14 @@ public class MyPetsList extends MenuActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.myadds_layout);
+        this.setUI();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-       this.setUI();
+        this.mPetAdapter = new PetAdapter(this.loadPets(), this,"mylist");
+        this.rvPetList.setAdapter(this.mPetAdapter);
     }
 
     @Override
@@ -54,13 +56,11 @@ public class MyPetsList extends MenuActivity {
     private void setUI() {
         pList = new ArrayList<>();
         this.rvPetList = (RecyclerView) findViewById(R.id.rvPetList);
-
-            this.mPetAdapter = new PetAdapter(this.loadPets(), this,"mylist");
             this.mLayoutManager = new LinearLayoutManager(this);
             this.mItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
             this.rvPetList.addItemDecoration(this.mItemDecoration);
             this.rvPetList.setLayoutManager(this.mLayoutManager);
-            this.rvPetList.setAdapter(this.mPetAdapter);
+
 
 
     }
