@@ -76,8 +76,7 @@ public class ImageSwitch extends MenuActivity {
             public View makeView() {
                 ImageView myView = new ImageView(getApplicationContext());
                 myView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                myView.setLayoutParams(new
-                        ImageSwitcher.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                myView.setLayoutParams(new ImageSwitcher.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                 return myView;
             }
         });

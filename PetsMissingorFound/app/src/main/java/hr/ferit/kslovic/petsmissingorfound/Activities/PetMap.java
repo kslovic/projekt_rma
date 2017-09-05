@@ -200,12 +200,16 @@ public class PetMap extends MenuActivity implements OnMapReadyCallback,GoogleApi
                 if(grantResults.length >0){
                     if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
                         Log.d("Permission","Permission granted. User pressed allow.");
+                        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                           mGoogleMap.setMyLocationEnabled(true);
+                        }
                     }
                     else{
                         Log.d("Permission","Permission not granted. User pressed deny.");
                         askForPermission();
                     }
                 }
+                break;
         }
     }
     private void askForPermission(){

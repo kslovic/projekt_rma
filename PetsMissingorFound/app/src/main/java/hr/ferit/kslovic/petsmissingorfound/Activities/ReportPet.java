@@ -14,10 +14,12 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -58,8 +60,11 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import hr.ferit.kslovic.petsmissingorfound.Models.Pet;
 import hr.ferit.kslovic.petsmissingorfound.Models.PetLocation;
@@ -73,6 +78,7 @@ public class ReportPet extends MenuActivity implements View.OnClickListener, Ada
 
     private static final int REQUEST_LOCATION_PERMISSION = 10;
     private static final int REQUEST_CAMERA_PERMISSION = 100;
+    private static final int REQUEST_WRITE_STORAGE_PERMISSION = 1;
     private final int REQUEST_STORAGE_PERMISSION = 1234;
     private EditText etPname;
     private EditText etPbreed;
@@ -102,6 +108,7 @@ public class ReportPet extends MenuActivity implements View.OnClickListener, Ada
     private Bitmap bmp;
     private ByteArrayOutputStream bos;
     private Marker newMarker;
+    private File photoFile=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -235,7 +242,7 @@ public class ReportPet extends MenuActivity implements View.OnClickListener, Ada
                 }
                 break;
             case R.id.bUpload:
-                if(pictureUri!=null){
+                if(bmp!=null){
                     ivUpload.setVisibility(GONE);
                     bUpload.setVisibility(GONE);
                     RelativeLayout.LayoutParams r = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -244,9 +251,11 @@ public class ReportPet extends MenuActivity implements View.OnClickListener, Ada
                     final ProgressDialog pDialog = new ProgressDialog(this);
                     pDialog.setTitle("Uploading...");
                     pDialog.show();
-
+                    Log.d("Kristina","bUpload");
                     byte[] data = bos.toByteArray();
-                    StorageReference refStorage = mStorageRef.child("images/"+ System.currentTimeMillis()+"."+getPictureExt(pictureUri));
+                    FirebaseUser fUser =FirebaseAuth.getInstance().getCurrentUser();
+                    String key = fUser.getUid();
+                    StorageReference refStorage = mStorageRef.child("images/"+ System.currentTimeMillis()+ key +getPictureExt(pictureUri));
                     refStorage.putBytes(data)
                             .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                 @Override
@@ -301,6 +310,7 @@ public class ReportPet extends MenuActivity implements View.OnClickListener, Ada
         bUpload.setVisibility(VISIBLE);
         p.addRule(RelativeLayout.BELOW, R.id.bUpload);
         tvLocation.setLayoutParams(p);
+
     }
     private void openStorage() {
         Intent intentPic = new Intent();
@@ -310,38 +320,65 @@ public class ReportPet extends MenuActivity implements View.OnClickListener, Ada
        setPictue();
     }
 
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpeg",         /* suffix */
+                storageDir      /* directory */
+        );
 
+        return image;
+    }
 
     private void openCamera() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, REQUEST_CAMERA_PERMISSION);
-        setPictue();
+        boolean hasWriteStoragePermission = (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
+
+        if (intent.resolveActivity(getPackageManager()) != null) {
+
+                if (!hasWriteStoragePermission) {
+                    requestPermission(REQUEST_WRITE_STORAGE_PERMISSION);
+                } else {
+                    try {
+                    photoFile = createImageFile();
+                    } catch (IOException ex) {
+
+                    }
+                }
+
+            // Continue only if the File  if (photoFile != null) {
+                if (photoFile != null) {
+                   pictureUri = FileProvider.getUriForFile(this,
+                            "com.example.android.fileprovider",
+                            photoFile);
+                   intent.putExtra(MediaStore.EXTRA_OUTPUT, pictureUri);
+                startActivityForResult(intent, REQUEST_CAMERA_PERMISSION);
+            }
+
+            setPictue();
+        }
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-            if (resultCode == RESULT_OK && data != null && data.getData() != null) {
-                pictureUri = data.getData();
-                try {
-                    BitmapFactory.Options options = new BitmapFactory.Options();
-                    options.inSampleSize = 4;
+        Log.d("Kristina","result");
+            switch (requestCode) {
+                case REQUEST_STORAGE_PERMISSION:
+                    if (resultCode == RESULT_OK && data != null && data.getData() != null) {
+                        super.onActivityResult(requestCode, resultCode, data);
+                        pictureUri = data.getData();
+                        savePicture();
 
-                    AssetFileDescriptor fileDescriptor = null;
-                    fileDescriptor =
-                            this.getContentResolver().openAssetFileDescriptor(pictureUri, "r");
-
-                    bmp = BitmapFactory.decodeFileDescriptor(fileDescriptor.getFileDescriptor(), null, options);
-                    bos = new ByteArrayOutputStream();
-                    bmp.compress(Bitmap.CompressFormat.JPEG, 70, bos);
-                    Glide.with(this)
-                            .load(pictureUri)
-                            .into(ivUpload);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
+                    }
+                    break;
+                case REQUEST_CAMERA_PERMISSION:
+                    if (resultCode == RESULT_OK){
+                        savePicture();
+                    }
+                    break;
             }
     }
     public String getPictureExt(Uri uri){
@@ -349,6 +386,29 @@ public class ReportPet extends MenuActivity implements View.OnClickListener, Ada
         MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
         return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
     }
+    private void savePicture() {
+        try {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = 4;
+
+            AssetFileDescriptor fileDescriptor = null;
+            fileDescriptor =
+                    this.getContentResolver().openAssetFileDescriptor(pictureUri, "r");
+
+            bmp = BitmapFactory.decodeFileDescriptor(fileDescriptor.getFileDescriptor(), null, options);
+
+            bos = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.JPEG, 70, bos);
+            Log.d("Kristina", pictureUri.toString());
+            Glide.with(this)
+                    .load(pictureUri)
+                    .into(ivUpload);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
       //  ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
@@ -386,6 +446,9 @@ public class ReportPet extends MenuActivity implements View.OnClickListener, Ada
             case REQUEST_STORAGE_PERMISSION:
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_STORAGE_PERMISSION);
                 break;
+            case REQUEST_WRITE_STORAGE_PERMISSION:
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_STORAGE_PERMISSION);
+                break;
         }
     }
     @Override
@@ -396,12 +459,24 @@ public class ReportPet extends MenuActivity implements View.OnClickListener, Ada
                     if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
                         Log.d("Permission","Permission granted. User pressed allow.");
                         switch (requestCode) {
+                            case REQUEST_LOCATION_PERMISSION:
+                                if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                                    mGoogleMap.setMyLocationEnabled(true);
+                                }
+                                break;
                             case REQUEST_CAMERA_PERMISSION:
                                 openCamera();
                                 break;
                             case REQUEST_STORAGE_PERMISSION:
                                 openStorage();
                                 break;
+                            case REQUEST_WRITE_STORAGE_PERMISSION:
+                                try{
+                                photoFile = createImageFile();
+                                break;
+                                } catch (IOException ex) {
+
+                                }
                         }
                     }
                     else{
@@ -422,6 +497,9 @@ public class ReportPet extends MenuActivity implements View.OnClickListener, Ada
                 break;
             case REQUEST_STORAGE_PERMISSION:
                 shouldExplain = ActivityCompat.shouldShowRequestPermissionRationale(ReportPet.this, Manifest.permission.READ_EXTERNAL_STORAGE);
+                break;
+            case REQUEST_WRITE_STORAGE_PERMISSION:
+                shouldExplain = ActivityCompat.shouldShowRequestPermissionRationale(ReportPet.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 break;
         }
 
@@ -448,6 +526,10 @@ public class ReportPet extends MenuActivity implements View.OnClickListener, Ada
             case REQUEST_STORAGE_PERMISSION:
                 dialogBuilder.setTitle("Read storage permission")
                         .setMessage("We read your storage and need your permission");
+                break;
+            case REQUEST_WRITE_STORAGE_PERMISSION:
+                dialogBuilder.setTitle("Write storage permission")
+                        .setMessage("We write in your storage and need your permission");
                 break;
         }
         dialogBuilder

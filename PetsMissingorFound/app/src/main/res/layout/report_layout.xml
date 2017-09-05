@@ -116,7 +116,7 @@
         android:id="@+id/ivUpload"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:layout_below="@id/tvPpicture"
+        android:layout_below="@id/llReport"
         android:visibility="gone"
         android:layout_centerHorizontal="true"
         />

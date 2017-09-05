@@ -52,6 +52,7 @@ public class PetDetails extends MenuActivity implements OnMapReadyCallback{
     private Button bPrevious;
     private Button bNext;
     private TextView tvstatusP;
+    private  TextView tvphoneP;
     private ImageButton ibPetDetails;
     private ImageButton ibNewLoc;
     private String picture;
@@ -103,6 +104,7 @@ public class PetDetails extends MenuActivity implements OnMapReadyCallback{
         tvdetailsP = (TextView) findViewById(R.id.tvdetailsP);
         bcontactP = (Button) findViewById(R.id.bcontactP);
         tvstatusP = (TextView) findViewById(R.id.tvstatusP);
+        tvphoneP =(TextView) findViewById(R.id.tvphoneP);
         ibPetDetails = (ImageButton) findViewById(R.id.ibPetDetails);
         ibNewLoc = (ImageButton) findViewById(R.id.ibNewLoc);
         bPrevious = (Button) findViewById(R.id.bPrevious);
@@ -254,12 +256,16 @@ public class PetDetails extends MenuActivity implements OnMapReadyCallback{
                 if(grantResults.length >0){
                     if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
                         Log.d("Permission","Permission granted. User pressed allow.");
+                        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                            mGoogleMap.setMyLocationEnabled(true);
+                        }
                     }
                     else{
                         Log.d("Permission","Permission not granted. User pressed deny.");
                         askForPermission();
                     }
                 }
+                break;
         }
     }
     private void askForPermission(){
@@ -319,6 +325,7 @@ public class PetDetails extends MenuActivity implements OnMapReadyCallback{
                     tvbreedP.setText(pet.getEtPbreed());
                     tvdetailsP.setText(pet.getEtPdetails());
                     tvstatusP.setText(pet.getsStatus());
+                    tvphoneP.setText(pet.getEtPcontact());
                     pUid = pet.getUid();
                     picture =pet.getPicture();
                     Glide.with(getApplicationContext()).load(pet.getPicture()).into(ibPetDetails);

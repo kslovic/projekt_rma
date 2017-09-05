@@ -113,6 +113,25 @@
         android:layout_toRightOf="@id/tvPstatus"
         android:layout_marginLeft="30dp"
         />
+ <TextView
+     android:id="@+id/tvPphone"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:text="@string/Pphone"
+     android:textSize="@dimen/Label"
+     android:textColor="@color/label"
+     android:layout_below="@id/tvPstatus"
+     />
+ <TextView
+     android:id="@+id/tvphoneP"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:textSize="@dimen/Label"
+     android:textColor="@color/label"
+     android:layout_below="@id/tvPstatus"
+     android:layout_toRightOf="@id/tvPphone"
+     android:layout_marginLeft="30dp"
+     />
     <TextView
         android:id="@+id/tvPlocation"
         android:layout_width="wrap_content"
@@ -120,7 +139,7 @@
         android:text="@string/Plocation"
         android:textSize="@dimen/Label"
         android:textColor="@color/label"
-        android:layout_below="@id/tvstatusP"
+        android:layout_below="@id/tvphoneP"
         />
     <LinearLayout
         android:id="@+id/llLocation"
