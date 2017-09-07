@@ -161,6 +161,8 @@ public class PetDetails extends MenuActivity implements OnMapReadyCallback{
                     DatabaseReference nDatabase = FirebaseDatabase.getInstance().getReference("notifications");
                     String nid = nDatabase.push().getKey();
                     nDatabase.child(nid).setValue(notifications);
+                    ibNewLoc.setVisibility(View.GONE);
+                    Toast.makeText(getApplicationContext(), "New location saved !", Toast.LENGTH_LONG).show();
                     if(newMarker!=null)
                     newMarker.remove();
                 }

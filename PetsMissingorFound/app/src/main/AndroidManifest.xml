@@ -5,8 +5,10 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -24,6 +26,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.example.android.fileprovider"
@@ -31,8 +34,9 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -41,19 +45,26 @@
             android:value="AIzaSyBgNwC1WH3IqOffqpZVt92pkkg2qRWzla8" />
 
         <activity android:name=".Activities.Register" />
-        <activity android:name=".Activities.Welcome"
+        <activity
+            android:name=".Activities.Welcome"
             android:theme="@style/BaseTheme" />
-        <activity android:name=".Activities.ReportPet"
+        <activity
+            android:name=".Activities.ReportPet"
             android:theme="@style/BaseTheme" />
-        <activity android:name=".Activities.MyPetsList"
+        <activity
+            android:name=".Activities.MyPetsList"
             android:theme="@style/BaseTheme" />
-        <activity android:name=".Activities.AllPetsList"
-        android:theme="@style/BaseTheme"/>
-        <activity android:name=".Activities.PetMap"
+        <activity
+            android:name=".Activities.AllPetsList"
             android:theme="@style/BaseTheme" />
-        <activity android:name=".Activities.PetDetails"
+        <activity
+            android:name=".Activities.PetMap"
             android:theme="@style/BaseTheme" />
-        <activity android:name=".Activities.ImageSwitch"
+        <activity
+            android:name=".Activities.PetDetails"
+            android:theme="@style/BaseTheme" />
+        <activity
+            android:name=".Activities.ImageSwitch"
             android:theme="@style/BaseTheme" />
         <activity
             android:name=".Activities.ChatActivity"
@@ -61,13 +72,21 @@
         <activity
             android:name=".Activities.InboxActivity"
             android:theme="@style/BaseTheme" />
-        <activity android:name=".Activities.ProfileActivity"
+        <activity
+            android:name=".Activities.ProfileActivity"
             android:theme="@style/BaseTheme" />
-        <activity android:name=".Activities.AdminActivity"
+        <activity
+            android:name=".Activities.AdminActivity"
             android:theme="@style/BaseTheme" />
-        <activity android:name=".Activities.UserList"
+        <activity
+            android:name=".Activities.UserList"
             android:theme="@style/BaseTheme" />
-        <activity android:name=".Activities.MenuActivity"
+        <activity
+            android:name=".Activities.MenuActivity"
+            android:theme="@style/BaseTheme" />
+        <activity android:name=".Activities.AdminMenuActivity"
+            android:theme="@style/BaseTheme" />
+        <activity android:name=".Activities.PetsList"
             android:theme="@style/BaseTheme" ></activity>
     </application>
 

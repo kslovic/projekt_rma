@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
@@ -69,8 +71,9 @@ public class ImageSwitch extends MenuActivity {
     private void setUI() {
         bPrevious = (Button) findViewById(R.id.bPrevious);
         bNext = (Button) findViewById(R.id.bNext);
-
         isPetPic = (ImageSwitcher) findViewById(R.id.isPetPic);
+        Animation in = AnimationUtils.loadAnimation(this,android.R.anim.slide_in_left);
+        isPetPic.setInAnimation(in);
         isPetPic.setFactory(new ViewSwitcher.ViewFactory() {
             @Override
             public View makeView() {

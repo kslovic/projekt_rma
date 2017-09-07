@@ -120,7 +120,7 @@ public class ReportPet extends MenuActivity implements View.OnClickListener, Ada
     protected void onResume() {
         super.onResume();
         pid = getIntent().getStringExtra("pid");
-        if(pid!=null)
+        if(pid!=null&&pictureUri==null)
         setData();
     }
 

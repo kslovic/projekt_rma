@@ -27,6 +27,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 import hr.ferit.kslovic.petsmissingorfound.Activities.ProfileActivity;
+import hr.ferit.kslovic.petsmissingorfound.Models.Message;
+import hr.ferit.kslovic.petsmissingorfound.Models.Notifications;
 import hr.ferit.kslovic.petsmissingorfound.Models.Pet;
 import hr.ferit.kslovic.petsmissingorfound.Models.Users;
 import hr.ferit.kslovic.petsmissingorfound.R;
@@ -72,6 +74,10 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
                                     context.startActivity(intent);
                                     return true;
                                 case R.id.delete:
+                                    DatabaseReference deleteMesssage = FirebaseDatabase.getInstance().getReference("messages").child(user.getUid());
+                                    deleteMesssages(user.getUid());
+                                    deleteNotification(user.getUid());
+                                    deleteMesssage.removeValue();
                                     deletePets(user.getUid());
                                     DatabaseReference deleteRef = FirebaseDatabase.getInstance().getReference("users").child(user.getUid());
                                     deleteRef.removeValue();
@@ -96,6 +102,69 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
                 }
             });
         }
+    }
+
+    private void deleteMesssages(final String uid) {
+        final DatabaseReference mRef = FirebaseDatabase.getInstance().getReference("messages");
+        mRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                            String key = snapshot.getKey();
+                    for (DataSnapshot snap : snapshot.getChildren()) {
+
+                            String pUid = snap.getKey();
+                            if (pUid.equals(uid)) {
+                                DatabaseReference deletenRef = mRef.child(key).child(pUid);
+                                deletenRef.removeValue();
+                            }
+                        }
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+
+            }
+        });
+
+    }
+
+    private void deleteNotification(final String uid) {
+        final DatabaseReference nRef = FirebaseDatabase.getInstance().getReference("notifications");
+        nRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                   Notifications notification = snapshot.getValue(Notifications.class);
+                    String key = snapshot.getKey();
+                    String pUid = notification.getUid();
+                    String pUid2 = notification.getId();
+                    if(pUid.equals(uid)) {
+
+                        DatabaseReference deletenRef = nRef.child(key);
+                        deletenRef.removeValue();
+                    }
+                    else if(pUid2.equals(uid)) {
+                        DatabaseReference deletenRef = nRef.child(key);
+                        deletenRef.removeValue();
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+
+            }
+        });
+
     }
 
     private void deletePets(final String uid) {

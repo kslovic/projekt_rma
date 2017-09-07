@@ -14,11 +14,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import hr.ferit.kslovic.petsmissingorfound.Models.Notifications;
 import hr.ferit.kslovic.petsmissingorfound.Models.Pet;
 import hr.ferit.kslovic.petsmissingorfound.Activities.PetDetails;
 import hr.ferit.kslovic.petsmissingorfound.R;
@@ -53,7 +57,7 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.ViewHolder> {
             public boolean onLongClick(View v) {
 
 
-
+                    deleteNotification(pet.getPid());
                     DatabaseReference deleteRef = FirebaseDatabase.getInstance().getReference("pets").child(pet.getPid());
                     deleteRef.removeValue();
 
@@ -126,6 +130,33 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.ViewHolder> {
     public void deleteAt(int position) {
         this.mPets.remove(position);
         this.notifyItemRemoved(position);
+
+    }
+    private void deleteNotification(final String uid) {
+        final DatabaseReference nRef = FirebaseDatabase.getInstance().getReference("notifications");
+        nRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                    Notifications notification = snapshot.getValue(Notifications.class);
+                    String key = snapshot.getKey();
+                    String pUid = notification.getId();
+                    if(pUid.equals(uid)) {
+
+                        DatabaseReference deletenRef = nRef.child(key);
+                        deletenRef.removeValue();
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+
+            }
+        });
 
     }
 

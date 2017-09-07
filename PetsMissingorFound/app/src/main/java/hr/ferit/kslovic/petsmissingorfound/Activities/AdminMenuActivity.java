@@ -1,11 +1,13 @@
 package hr.ferit.kslovic.petsmissingorfound.Activities;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.RingtoneManager;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -24,44 +26,26 @@ import com.google.firebase.database.ValueEventListener;
 import hr.ferit.kslovic.petsmissingorfound.Models.Notifications;
 import hr.ferit.kslovic.petsmissingorfound.R;
 
-public class MenuActivity extends AppCompatActivity {
+public class AdminMenuActivity extends AppCompatActivity {
+
     DatabaseReference nRef;
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
     ValueEventListener nListener;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_layout, menu);
+        inflater.inflate(R.menu.admin_menu_layout, menu);
         return true;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mAuth = FirebaseAuth.getInstance();
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user == null) {
-
-                    Intent intent = new Intent(getApplicationContext(), Login.class);
-                    startActivity(intent);
-                }
-                // ...
-            }
-        };
-        mAuth.addAuthStateListener(mAuthListener);
         loadNotifications();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
         if(nListener!=null){
             nRef.removeEventListener(nListener);
         }
@@ -73,34 +57,16 @@ public class MenuActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.iSignOut:
                 FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(getApplicationContext(), Login.class);
+                startActivity(intent);
                 return true;
-            case R.id.iReport:
-                Intent intentReport = new Intent(getApplicationContext(), ReportPet.class);
-                startActivity(intentReport);
+            case R.id.iUsers:
+                Intent intentUsers = new Intent(getApplicationContext(), UserList.class);
+                startActivity(intentUsers);
                 return true;
-            case R.id.iMyAdds:
-                Intent intentMyAdds = new Intent(getApplicationContext(), MyPetsList.class);
-                startActivity(intentMyAdds);
-                return true;
-            case R.id.iSearchP:
-                Intent intentAllAdds = new Intent(getApplicationContext(), AllPetsList.class);
-                startActivity(intentAllAdds);
-                return true;
-            case R.id.iShow:
-                Intent intentLocations = new Intent(getApplicationContext(), PetMap.class);
-                startActivity(intentLocations);
-                return true;
-            case R.id.iInbox:
-                Intent intentInbox = new Intent(getApplicationContext(), InboxActivity.class);
-                startActivity(intentInbox);
-                return true;
-            case R.id.iProfile:
-                FirebaseUser user =FirebaseAuth.getInstance().getCurrentUser();
-                if(user!=null) {
-                    Intent intentProfile = new Intent(getApplicationContext(), ProfileActivity.class);
-                    intentProfile.putExtra("uid", user.getUid());
-                    startActivity(intentProfile);
-                }
+            case R.id.iPets:
+                Intent intentPets = new Intent(getApplicationContext(), PetsList.class);
+                startActivity(intentPets);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -113,7 +79,7 @@ public class MenuActivity extends AppCompatActivity {
         if(user!=null)
 
         {
-            nRef =FirebaseDatabase.getInstance().getReference("notifications");
+            nRef = FirebaseDatabase.getInstance().getReference("notifications");
             nListener = nRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {

@@ -1,5 +1,6 @@
 package hr.ferit.kslovic.petsmissingorfound.Activities;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,7 +25,7 @@ import hr.ferit.kslovic.petsmissingorfound.Adapters.UserAdapter;
 import hr.ferit.kslovic.petsmissingorfound.Models.Users;
 import hr.ferit.kslovic.petsmissingorfound.R;
 
-public class UserList extends MenuActivity {
+public class UserList extends AdminMenuActivity {
 
     private RecyclerView rvUsersList;
     private UserAdapter mUserAdapter;
@@ -40,8 +41,6 @@ public class UserList extends MenuActivity {
         setContentView(R.layout.activity_user_list);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user!=null) {
-            String intent =getIntent().getStringExtra("intent");
-            if(intent.equals("admininterface"))
                 loadUser(user.getUid());
         }
 

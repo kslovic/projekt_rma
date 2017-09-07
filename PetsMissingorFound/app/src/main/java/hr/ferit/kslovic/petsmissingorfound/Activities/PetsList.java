@@ -22,18 +22,17 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import hr.ferit.kslovic.petsmissingorfound.Models.Pet;
 import hr.ferit.kslovic.petsmissingorfound.Adapters.PetAdapter;
-import hr.ferit.kslovic.petsmissingorfound.R;
+import hr.ferit.kslovic.petsmissingorfound.Models.Pet;
 import hr.ferit.kslovic.petsmissingorfound.Models.Users;
+import hr.ferit.kslovic.petsmissingorfound.R;
 
-public class AllPetsList extends MenuActivity implements AdapterView.OnItemSelectedListener {
+public class PetsList extends AdminMenuActivity implements AdapterView.OnItemSelectedListener {
 
     private RecyclerView rvPetList;
     private PetAdapter mPetAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView.ItemDecoration mItemDecoration;
-    private String pPic;
     private ArrayList<Pet> pList;
     private Spinner sSearch;
     private String statusSpinner;
@@ -49,7 +48,7 @@ public class AllPetsList extends MenuActivity implements AdapterView.OnItemSelec
         setContentView(R.layout.petlist_layout);
         user = FirebaseAuth.getInstance().getCurrentUser();
         if(user!=null) {
-          this.setUI();
+                loadUser(user.getUid());
         }
 
     }
@@ -65,8 +64,8 @@ public class AllPetsList extends MenuActivity implements AdapterView.OnItemSelec
     protected void onResume() {
         super.onResume();
         if(mPetAdapter!=null){
-        this.mPetAdapter = new PetAdapter(this.loadAllPets(), this,activity);
-        this.rvPetList.setAdapter(this.mPetAdapter);
+            this.mPetAdapter = new PetAdapter(this.loadAllPets(), this,activity);
+            this.rvPetList.setAdapter(this.mPetAdapter);
         }
     }
 
@@ -96,21 +95,21 @@ public class AllPetsList extends MenuActivity implements AdapterView.OnItemSelec
             // User is signed in
             DatabaseReference addRef = FirebaseDatabase.getInstance().getReference("pets");
             query = addRef.orderByChild("pubTime");
-           qListener = query.addValueEventListener(new ValueEventListener() {
+            qListener = query.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     pList.clear();
-                            for (DataSnapshot PetSnapshot :dataSnapshot.getChildren()) {
-                                Pet pet = PetSnapshot.getValue(Pet.class);
-                                String pStatus = pet.getsStatus();
-                                if(pStatus.equals(statusSpinner)) {
-                                    Log.d("Kristina", pet.toString());
-                                    pList.add(pet);
-                                    mPetAdapter.notifyDataSetChanged();
+                    for (DataSnapshot PetSnapshot :dataSnapshot.getChildren()) {
+                        Pet pet = PetSnapshot.getValue(Pet.class);
+                        String pStatus = pet.getsStatus();
+                        if(pStatus.equals(statusSpinner)) {
+                            Log.d("Kristina", pet.toString());
+                            pList.add(pet);
+                            mPetAdapter.notifyDataSetChanged();
 
-                                }
+                        }
 
-                                rvPetList.setAdapter(mPetAdapter);
+                        rvPetList.setAdapter(mPetAdapter);
 
                     }
 
@@ -123,7 +122,7 @@ public class AllPetsList extends MenuActivity implements AdapterView.OnItemSelec
                 }
             });
         }
-            return pList;
+        return pList;
 
     }
     @Override
@@ -132,12 +131,36 @@ public class AllPetsList extends MenuActivity implements AdapterView.OnItemSelec
             query.removeEventListener(qListener);
         statusSpinner = parent.getItemAtPosition(position).toString();
         Log.d("Kristina",statusSpinner);
-            this.mPetAdapter = new PetAdapter(this.loadAllPets(), this,activity);
+        this.mPetAdapter = new PetAdapter(this.loadAllPets(), this,activity);
 
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+    public void loadUser(String uid){
+
+        DatabaseReference mapRef = FirebaseDatabase.getInstance().getReference("users").child(uid);
+        mapRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+
+
+                Users user =dataSnapshot.getValue(Users.class);
+                activity = user.getLevel();
+                if(activity.equals("admin"))
+                    setUI();
+                else
+                    Toast.makeText(getApplicationContext(),"You are not allowded to preform this action!!!",Toast.LENGTH_LONG);
+
+            }
+            @Override
+            public void onCancelled (DatabaseError error){
+                // Failed to read value
+
+            }
+        });
     }
 }

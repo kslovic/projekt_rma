@@ -60,6 +60,8 @@
     <string name="pswHint">eg. Hsndsk55@</string>
     <string name="sCheckNotifications">Check  notifications</string>
     <string name="Pphone">Phone:</string>
+    <string name="sUsers">Users</string>
+    <string name="sPets">Pets</string>
     <string-array name="status_array">
         <item>Found</item>
         <item>Lost</item>

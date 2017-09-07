@@ -114,12 +114,9 @@ public class Register extends Activity implements View.OnClickListener {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     Log.d("Kristina", "createUserWithEmail:onComplete:" + task.isSuccessful());
-                                    // If sign in fails, display a message to the user. If sign in succeeds
-                                    // the auth state listener will be notified and logic to handle the
-                                    // signed in user can be handled in the listener.
+
                                     if (!task.isSuccessful()) {
-                                        // Toast.makeText(EmailPasswordActivity.this, R.string.auth_failed,
-                                        //       Toast.LENGTH_SHORT).show();
+                                       Toast.makeText(getApplicationContext(), "Account with this email already exists, please choose another !!!", Toast.LENGTH_SHORT).show();
                                     } else {
                                         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                                         if (firebaseUser != null) {

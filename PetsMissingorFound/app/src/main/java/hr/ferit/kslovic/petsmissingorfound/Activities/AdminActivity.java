@@ -9,7 +9,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import hr.ferit.kslovic.petsmissingorfound.R;
 
-public class AdminActivity extends MenuActivity {
+public class AdminActivity extends AdminMenuActivity {
 
     private Button bUsers;
     private  Button bPets;
@@ -29,15 +29,13 @@ public class AdminActivity extends MenuActivity {
             @Override
             public void onClick(View view) {
                 Intent intentAllUsers = new Intent(getApplicationContext(), UserList.class);
-                intentAllUsers.putExtra("intent","admininterface");
                 startActivity(intentAllUsers);
             }
         });
         bPets.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intentAllAdds = new Intent(getApplicationContext(), AllPetsList.class);
-                intentAllAdds.putExtra("intent","admininterface");
+                Intent intentAllAdds = new Intent(getApplicationContext(), PetsList.class);
                 startActivity(intentAllAdds);
             }
         });
