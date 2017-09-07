@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -65,7 +66,7 @@ public class Login extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         email = etEmail.getText().toString();
         uPsw = etPsw.getText().toString();
-        switch(v.getId()) {
+        switch (v.getId()) {
 
             case R.id.bnotRegistered:
                 Intent intent = new Intent();
@@ -73,29 +74,33 @@ public class Login extends Activity implements View.OnClickListener {
                 this.startActivity(intent);
                 break;
             case R.id.bLogin:
-
-                            mAuth.signInWithEmailAndPassword(email, uPsw)
-                                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<AuthResult> task) {
-
-
-                                            if (!task.isSuccessful()) {
-                                                Log.w("Kristina", "signInWithEmail:failed", task.getException());
-                                                Toast.makeText(getApplicationContext(), "Wrong e-mail and password combination !!!", Toast.LENGTH_LONG).show();
-                                            } else {
-                                                Log.d("Kristina", "signInWithEmail:onComplete:" + task.isSuccessful());
-                                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-                                                if (user != null) {
-                                                    loadUser(user.getUid());
-                                                }
-                                            }
+                if(TextUtils.isEmpty(email)||TextUtils.isEmpty(uPsw)){
+                    Toast.makeText(getApplicationContext(), "Please fill all fields", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                mAuth.signInWithEmailAndPassword(email, uPsw)
+                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
 
 
-                                            // ...
-                                        }
-                                    });
+                                if (!task.isSuccessful()) {
+                                    Log.w("Kristina", "signInWithEmail:failed", task.getException());
+                                    Toast.makeText(getApplicationContext(), "Wrong e-mail and password combination !!!", Toast.LENGTH_LONG).show();
+                                } else {
+                                    Log.d("Kristina", "signInWithEmail:onComplete:" + task.isSuccessful());
+                                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                                    if (user != null) {
+                                        loadUser(user.getUid());
+                                    }
+                                }
+
+
+                                // ...
+                            }
+                        });
+        }
                 break;
 
         }
