@@ -30,6 +30,8 @@ public class AdminMenuActivity extends AppCompatActivity {
 
     DatabaseReference nRef;
     ValueEventListener nListener;
+    private int notificationId = 1;
+    private String oldPuid = null;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -124,8 +126,15 @@ public class AdminMenuActivity extends AppCompatActivity {
                     .setLights(Color.BLUE, 2000, 1000)
                     .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
                     .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+            Notification notification = notificationBuilder.build();
+            NotificationManager notificationManager =
+                    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.notify(0, notification);
         }
         else{
+            if(oldPuid!=null&&!oldPuid.equals(id))
+                notificationId ++;
+            oldPuid = id;
             Intent intentNotification = new Intent(getApplicationContext(), ChatActivity.class);
             intentNotification.putExtra("pUid",id);
             PendingIntent notificationPendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intentNotification, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -137,10 +146,11 @@ public class AdminMenuActivity extends AppCompatActivity {
                     .setLights(Color.GREEN, 2000, 1000)
                     .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
                     .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+            Notification notification = notificationBuilder.build();
+            NotificationManager notificationManager =
+                    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.notify(notificationId, notification);
         }
-        Notification notification = notificationBuilder.build();
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(0, notification);
+
     }
 }
