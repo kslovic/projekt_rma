@@ -109,6 +109,7 @@ public class ReportPet extends MenuActivity implements View.OnClickListener, Ada
     private ByteArrayOutputStream bos;
     private Marker newMarker;
     private File photoFile=null;
+    private String oldUid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -176,7 +177,11 @@ public class ReportPet extends MenuActivity implements View.OnClickListener, Ada
             case R.id.bReport:
                 FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                 if (firebaseUser != null) {
-                    String uid = firebaseUser.getUid();
+                    String uid;
+                    if(oldUid!=null)
+                        uid = oldUid;
+                    else
+                        uid= firebaseUser.getUid();
                     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("pets");
                     String pName = etPname.getText().toString();
                     String pBreed = etPbreed.getText().toString();
@@ -224,8 +229,9 @@ public class ReportPet extends MenuActivity implements View.OnClickListener, Ada
                                 locDatabase.child(locid).setValue(upLoc);
                             }
 
-                            Intent menuIntent = new Intent(getApplicationContext(), Welcome.class);
-                            startActivity(menuIntent);
+                            Intent petIntent = new Intent(getApplicationContext(), PetDetails.class);
+                            petIntent.putExtra("pid",pid);
+                            startActivity(petIntent);
                         }
 
 
@@ -567,6 +573,7 @@ public class ReportPet extends MenuActivity implements View.OnClickListener, Ada
                     pLatitude = pet.getLastLatitude();
                     pLongitude = pet.getLastLongitude();
                     pPicture = pet.getPicture();
+                    oldUid = pet.getUid();
 
                 }
 
