@@ -72,9 +72,4 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
 
 
     }
-    public void deleteAt(int position) {
-        this.mMail.remove(position);
-        this.notifyItemRemoved(position);
-
-    }
 }

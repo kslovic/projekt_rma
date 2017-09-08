@@ -38,11 +38,9 @@ public class ImageSwitch extends MenuActivity {
     private Button bNext;
     ArrayList<String> pList;
     private int i=0;
-    private Bitmap bm;
     Context mcontext;
     private DatabaseReference picRef;
     private ValueEventListener picListener;
-    private StorageReference mStorageRef;
     private String pid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

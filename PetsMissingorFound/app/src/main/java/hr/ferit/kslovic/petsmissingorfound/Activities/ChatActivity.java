@@ -71,6 +71,7 @@ public class ChatActivity extends MenuActivity {
     @Override
     public void onStop() {
         super.onStop();
+        if(mListener!=null)
         mRef.removeEventListener(mListener);
     }
 

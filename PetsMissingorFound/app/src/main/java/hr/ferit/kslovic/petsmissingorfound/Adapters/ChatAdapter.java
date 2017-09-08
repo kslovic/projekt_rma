@@ -51,9 +51,4 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
 
     }
-    public void deleteAt(int position) {
-        this.mMessages.remove(position);
-        this.notifyItemRemoved(position);
-
-    }
 }

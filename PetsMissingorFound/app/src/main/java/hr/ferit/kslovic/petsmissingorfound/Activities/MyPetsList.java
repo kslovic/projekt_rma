@@ -99,10 +99,6 @@ public class MyPetsList extends MenuActivity {
                 }
             });
 
-            Log.d("Kristina", "onAuthStateChanged:signed_in:" + user.getUid());
-        } else {
-            // User is signed out
-            Log.d("Kristina", "onAuthStateChanged:signed_out");
         }
 
         return pList;

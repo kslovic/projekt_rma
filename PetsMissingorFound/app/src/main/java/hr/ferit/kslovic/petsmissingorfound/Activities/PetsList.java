@@ -36,7 +36,7 @@ public class PetsList extends AdminMenuActivity implements AdapterView.OnItemSel
     private ArrayList<Pet> pList;
     private Spinner sSearch;
     private String statusSpinner;
-    private String activity = "AllList";
+    private String activity;
     private FirebaseUser user;
     private ValueEventListener qListener;
     private Query query;
